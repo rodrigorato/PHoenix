@@ -8,6 +8,11 @@ class IfThenElseNode(ChildfulNode):
         self.body = body  # A list of Nodes
         self.alternate = alternate  # A IfThenElse node or None
 
+    def __repr__(self):
+        return '<kind:' + self.kind + ',\n' \
+               'children:' + pretty_format(self.children) + ',\n' \
+               + (pretty_format(self.alternate) if self.alternate else '') + '>'
+
 
 # A SwitchNode's child are its CaseNodes
 class SwitchNode(ChildfulNode):
