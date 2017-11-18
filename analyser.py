@@ -5,7 +5,7 @@ from inputparser import get_input
 from vulnpatterns.patternmanager import PatternManager
 from jsonhandler import from_json_to_py
 import pprint
-
+from ast.nodemanager import NodeManager
 
 def pretty(obj):
     pprint.PrettyPrinter(indent=4).pprint(obj)
@@ -20,7 +20,9 @@ def main(args):
     # Get the program element from the input file
     program = from_json_to_py(get_input(args))
 
-    pretty(program)
+    program_node = NodeManager.build_node_from_json(program)
+
+    print(program_node)
 
 
 if __name__ == '__main__':
