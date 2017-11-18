@@ -1,0 +1,526 @@
+{
+  "kind": "program",
+  "children": [
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "arg",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "offsetlookup",
+        "what": {
+          "kind": "variable",
+          "name": "_POST",
+          "byref": false,
+          "curly": false
+        },
+        "offset": {
+          "kind": "string",
+          "value": "nis",
+          "isDoubleQuote": false
+        }
+      }
+    },
+    {
+      "kind": "while",
+      "test": {
+        "kind": "bin",
+        "type": "!=",
+        "left": {
+          "kind": "variable",
+          "name": "arg",
+          "byref": false,
+          "curly": false
+        },
+        "right": {
+          "kind": "string",
+          "value": "",
+          "isDoubleQuote": true
+        }
+      },
+      "body": {
+        "kind": "block",
+        "children": [
+          {
+            "kind": "assign",
+            "operator": "=",
+            "left": {
+              "kind": "variable",
+              "name": "first",
+              "byref": false,
+              "curly": false
+            },
+            "right": {
+              "kind": "call",
+              "what": {
+                "kind": "identifier",
+                "resolution": "uqn",
+                "name": "substr"
+              },
+              "arguments": [
+                {
+                  "kind": "variable",
+                  "name": "arg",
+                  "byref": false,
+                  "curly": false
+                },
+                {
+                  "kind": "number",
+                  "value": "0"
+                },
+                {
+                  "kind": "number",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          {
+            "kind": "if",
+            "test": {
+              "kind": "bin",
+              "type": "==",
+              "left": {
+                "kind": "variable",
+                "name": "first",
+                "byref": false,
+                "curly": false
+              },
+              "right": {
+                "kind": "string",
+                "value": "'",
+                "isDoubleQuote": true
+              }
+            },
+            "body": {
+              "kind": "block",
+              "children": [
+                {
+                  "kind": "assign",
+                  "operator": "=",
+                  "left": {
+                    "kind": "variable",
+                    "name": "indarg",
+                    "byref": false,
+                    "curly": false
+                  },
+                  "right": {
+                    "kind": "bin",
+                    "type": ".",
+                    "left": {
+                      "kind": "variable",
+                      "name": "indarg",
+                      "byref": false,
+                      "curly": false
+                    },
+                    "right": {
+                      "kind": "string",
+                      "value": "'",
+                      "isDoubleQuote": true
+                    }
+                  }
+                }
+              ]
+            },
+            "alternate": {
+              "kind": "if",
+              "test": {
+                "kind": "bin",
+                "type": "==",
+                "left": {
+                  "kind": "variable",
+                  "name": "first",
+                  "byref": false,
+                  "curly": false
+                },
+                "right": {
+                  "kind": "string",
+                  "value": " ",
+                  "isDoubleQuote": true
+                }
+              },
+              "body": {
+                "kind": "block",
+                "children": [
+                  {
+                    "kind": "assign",
+                    "operator": "=",
+                    "left": {
+                      "kind": "variable",
+                      "name": "indarg",
+                      "byref": false,
+                      "curly": false
+                    },
+                    "right": {
+                      "kind": "bin",
+                      "type": ".",
+                      "left": {
+                        "kind": "variable",
+                        "name": "indarg",
+                        "byref": false,
+                        "curly": false
+                      },
+                      "right": {
+                        "kind": "string",
+                        "value": " ",
+                        "isDoubleQuote": true
+                      }
+                    }
+                  }
+                ]
+              },
+              "alternate": {
+                "kind": "if",
+                "test": {
+                  "kind": "bin",
+                  "type": "==",
+                  "left": {
+                    "kind": "variable",
+                    "name": "first",
+                    "byref": false,
+                    "curly": false
+                  },
+                  "right": {
+                    "kind": "string",
+                    "value": "O",
+                    "isDoubleQuote": true
+                  }
+                },
+                "body": {
+                  "kind": "block",
+                  "children": [
+                    {
+                      "kind": "assign",
+                      "operator": "=",
+                      "left": {
+                        "kind": "variable",
+                        "name": "indarg",
+                        "byref": false,
+                        "curly": false
+                      },
+                      "right": {
+                        "kind": "bin",
+                        "type": ".",
+                        "left": {
+                          "kind": "variable",
+                          "name": "indarg",
+                          "byref": false,
+                          "curly": false
+                        },
+                        "right": {
+                          "kind": "string",
+                          "value": "O",
+                          "isDoubleQuote": true
+                        }
+                      }
+                    }
+                  ]
+                },
+                "alternate": {
+                  "kind": "if",
+                  "test": {
+                    "kind": "bin",
+                    "type": "==",
+                    "left": {
+                      "kind": "variable",
+                      "name": "first",
+                      "byref": false,
+                      "curly": false
+                    },
+                    "right": {
+                      "kind": "string",
+                      "value": "R",
+                      "isDoubleQuote": true
+                    }
+                  },
+                  "body": {
+                    "kind": "block",
+                    "children": [
+                      {
+                        "kind": "assign",
+                        "operator": "=",
+                        "left": {
+                          "kind": "variable",
+                          "name": "indarg",
+                          "byref": false,
+                          "curly": false
+                        },
+                        "right": {
+                          "kind": "bin",
+                          "type": ".",
+                          "left": {
+                            "kind": "variable",
+                            "name": "indarg",
+                            "byref": false,
+                            "curly": false
+                          },
+                          "right": {
+                            "kind": "string",
+                            "value": "R",
+                            "isDoubleQuote": true
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "alternate": {
+                    "kind": "if",
+                    "test": {
+                      "kind": "bin",
+                      "type": "==",
+                      "left": {
+                        "kind": "variable",
+                        "name": "first",
+                        "byref": false,
+                        "curly": false
+                      },
+                      "right": {
+                        "kind": "string",
+                        "value": "1",
+                        "isDoubleQuote": true
+                      }
+                    },
+                    "body": {
+                      "kind": "block",
+                      "children": [
+                        {
+                          "kind": "assign",
+                          "operator": "=",
+                          "left": {
+                            "kind": "variable",
+                            "name": "indarg",
+                            "byref": false,
+                            "curly": false
+                          },
+                          "right": {
+                            "kind": "bin",
+                            "type": ".",
+                            "left": {
+                              "kind": "variable",
+                              "name": "indarg",
+                              "byref": false,
+                              "curly": false
+                            },
+                            "right": {
+                              "kind": "string",
+                              "value": "1",
+                              "isDoubleQuote": true
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "alternate": {
+                      "kind": "if",
+                      "test": {
+                        "kind": "bin",
+                        "type": "==",
+                        "left": {
+                          "kind": "variable",
+                          "name": "first",
+                          "byref": false,
+                          "curly": false
+                        },
+                        "right": {
+                          "kind": "string",
+                          "value": "=",
+                          "isDoubleQuote": true
+                        }
+                      },
+                      "body": {
+                        "kind": "block",
+                        "children": [
+                          {
+                            "kind": "assign",
+                            "operator": "=",
+                            "left": {
+                              "kind": "variable",
+                              "name": "indarg",
+                              "byref": false,
+                              "curly": false
+                            },
+                            "right": {
+                              "kind": "bin",
+                              "type": ".",
+                              "left": {
+                                "kind": "variable",
+                                "name": "indarg",
+                                "byref": false,
+                                "curly": false
+                              },
+                              "right": {
+                                "kind": "string",
+                                "value": "=",
+                                "isDoubleQuote": true
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "alternate": {
+                        "kind": "if",
+                        "test": {
+                          "kind": "bin",
+                          "type": "==",
+                          "left": {
+                            "kind": "variable",
+                            "name": "first",
+                            "byref": false,
+                            "curly": false
+                          },
+                          "right": {
+                            "kind": "string",
+                            "value": "-",
+                            "isDoubleQuote": true
+                          }
+                        },
+                        "body": {
+                          "kind": "block",
+                          "children": [
+                            {
+                              "kind": "assign",
+                              "operator": "=",
+                              "left": {
+                                "kind": "variable",
+                                "name": "indarg",
+                                "byref": false,
+                                "curly": false
+                              },
+                              "right": {
+                                "kind": "bin",
+                                "type": ".",
+                                "left": {
+                                  "kind": "variable",
+                                  "name": "indarg",
+                                  "byref": false,
+                                  "curly": false
+                                },
+                                "right": {
+                                  "kind": "string",
+                                  "value": "-",
+                                  "isDoubleQuote": true
+                                }
+                              }
+                            }
+                          ]
+                        },
+                        "alternate": null,
+                        "shortForm": false
+                      },
+                      "shortForm": false
+                    },
+                    "shortForm": false
+                  },
+                  "shortForm": false
+                },
+                "shortForm": false
+              },
+              "shortForm": false
+            },
+            "shortForm": false
+          },
+          {
+            "kind": "assign",
+            "operator": "=",
+            "left": {
+              "kind": "variable",
+              "name": "arg",
+              "byref": false,
+              "curly": false
+            },
+            "right": {
+              "kind": "call",
+              "what": {
+                "kind": "identifier",
+                "resolution": "uqn",
+                "name": "substr"
+              },
+              "arguments": [
+                {
+                  "kind": "variable",
+                  "name": "arg",
+                  "byref": false,
+                  "curly": false
+                },
+                {
+                  "kind": "number",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "shortForm": false
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "query",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "encapsed",
+        "value": [
+          {
+            "kind": "string",
+            "value": "SELECT *FROM siswa WHERE nis='",
+            "isDoubleQuote": false
+          },
+          {
+            "kind": "variable",
+            "name": "indarg",
+            "byref": false,
+            "curly": false
+          },
+          {
+            "kind": "string",
+            "value": "'",
+            "isDoubleQuote": false
+          }
+        ],
+        "type": "string"
+      }
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "q",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "call",
+        "what": {
+          "kind": "identifier",
+          "resolution": "uqn",
+          "name": "mysql_query"
+        },
+        "arguments": [
+          {
+            "kind": "variable",
+            "name": "query",
+            "byref": false,
+            "curly": false
+          },
+          {
+            "kind": "variable",
+            "name": "koneksi",
+            "byref": false,
+            "curly": false
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,4 @@
+OS Command Injection
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES
+san_osci
+passthru,system,shell_exec,exec,pcntl_exec,popen

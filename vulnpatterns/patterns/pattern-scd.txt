@@ -1,0 +1,4 @@
+Source Code Disclosure
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES
+san_mix
+readfile

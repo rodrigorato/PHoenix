@@ -1,0 +1,14 @@
+Cross site scripting (XSS)
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES,$_SERVERS
+htmlentities,htmlspecialchars,strip_tags,urlencode,san_out
+echo,print,printf,die,error,exit
+
+Cross site scripting (XSS)
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES,$_SERVERS
+htmlentities,htmlspecialchars,strip_tags,urlencode,san_wdata
+file_put_contents
+
+Cross site scripting (XSS)
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES,$_SERVERS
+htmlentities,htmlspecialchars,strip_tags,urlencode,san_rdata
+file_get_contents

@@ -1,0 +1,94 @@
+{
+  "kind": "program",
+  "children": [
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "id_nilai",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "offsetlookup",
+        "what": {
+          "kind": "variable",
+          "name": "_GET",
+          "byref": false,
+          "curly": false
+        },
+        "offset": {
+          "kind": "string",
+          "value": "idn",
+          "isDoubleQuote": false
+        }
+      }
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "q_nilai",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "encapsed",
+        "value": [
+          {
+            "kind": "string",
+            "value": "SELECT * FROM nilai INNER JOIN matapelajaran ON \nmatapelajaran.id_matapelajaran = nilai.id_matapelajaran INNER JOIN siswa ON siswa.nis=nilai.nis \nINNER JOIN kelas ON kelas.id_kelas=nilai.id_kelas\nWHERE id_nilai='",
+            "isDoubleQuote": false
+          },
+          {
+            "kind": "variable",
+            "name": "id_nilai",
+            "byref": false,
+            "curly": false
+          },
+          {
+            "kind": "string",
+            "value": "'",
+            "isDoubleQuote": false
+          }
+        ],
+        "type": "string"
+      }
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "hasil",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "call",
+        "what": {
+          "kind": "identifier",
+          "resolution": "uqn",
+          "name": "mysql_query"
+        },
+        "arguments": [
+          {
+            "kind": "variable",
+            "name": "q_nilai",
+            "byref": false,
+            "curly": false
+          },
+          {
+            "kind": "variable",
+            "name": "koneksi",
+            "byref": false,
+            "curly": false
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}
