@@ -4,7 +4,7 @@ from ast.nodes import *
 class CycleNode(ChildfulNode):
     def __init__(self, kind, children, test):
         ChildfulNode.__init__(kind, children)
-        self.test = test
+        self.test = test  # Its an ExpressionNode
 
 
 class WhileNode(CycleNode):
