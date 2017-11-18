@@ -1,0 +1,119 @@
+{
+  "kind": "program",
+  "children": [
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "matapelajaran",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "offsetlookup",
+        "what": {
+          "kind": "variable",
+          "name": "_POST",
+          "byref": false,
+          "curly": false
+        },
+        "offset": {
+          "kind": "string",
+          "value": "matapelajaran",
+          "isDoubleQuote": false
+        }
+      }
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "idmatapelajaran",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "offsetlookup",
+        "what": {
+          "kind": "variable",
+          "name": "_POST",
+          "byref": false,
+          "curly": false
+        },
+        "offset": {
+          "kind": "string",
+          "value": "idmatapelajaran",
+          "isDoubleQuote": false
+        }
+      }
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "edit_matapelajaran",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "encapsed",
+        "value": [
+          {
+            "kind": "string",
+            "value": "UPDATE matapelajaran SET matapelajaran='",
+            "isDoubleQuote": false
+          },
+          {
+            "kind": "variable",
+            "name": "matapelajaran",
+            "byref": false,
+            "curly": false
+          },
+          {
+            "kind": "string",
+            "value": "' WHERE id_matapelajaran='",
+            "isDoubleQuote": false
+          },
+          {
+            "kind": "variable",
+            "name": "idmatapelajaran",
+            "byref": false,
+            "curly": false
+          },
+          {
+            "kind": "string",
+            "value": "'",
+            "isDoubleQuote": false
+          }
+        ],
+        "type": "string"
+      }
+    },
+    {
+      "kind": "call",
+      "what": {
+        "kind": "identifier",
+        "resolution": "uqn",
+        "name": "mysql_query"
+      },
+      "arguments": [
+        {
+          "kind": "variable",
+          "name": "edit_matapelajaran",
+          "byref": false,
+          "curly": false
+        },
+        {
+          "kind": "variable",
+          "name": "koneksi",
+          "byref": false,
+          "curly": false
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

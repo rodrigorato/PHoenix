@@ -1,0 +1,34 @@
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+mysql_escape_string,mysql_real_escape_string
+mysql_query,mysql_unbuffered_query,mysql_db_query
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+mysql_escape_string,mysql_real_escape_string
+mysqli_query,mysqli_real_query,mysqli_master_query,mysqli_multi_query
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+mysqli_stmt_bind_param
+mysqli_stmt_execute,mysqli_execute
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+mysqli::escape_string,mysqli::real_escape_string
+mysqli::query,mysqli::multi_query,mysqli::real_query
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+mysqli_stmt::bind_param
+mysqli_stmt::execute
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+db2_escape_string
+db2_exec
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+pg_escape_string,pg_escape_bytea
+pg_query,pg_send_query

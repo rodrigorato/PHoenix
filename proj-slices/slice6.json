@@ -1,0 +1,25 @@
+{
+  "kind": "program",
+  "children": [
+    {
+      "kind": "echo",
+      "arguments": [
+        {
+          "kind": "offsetlookup",
+          "what": {
+            "kind": "variable",
+            "name": "_POST",
+            "byref": false,
+            "curly": false
+          },
+          "offset": {
+            "kind": "string",
+            "value": "username",
+            "isDoubleQuote": false
+          }
+        }
+      ]
+    }
+  ],
+  "errors": []
+}

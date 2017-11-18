@@ -1,0 +1,4 @@
+File Inclusion/Path Traversal
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES
+san_mix
+fopen,file_get_contents,file,copy,unlink,move_uploaded_file,imagecreatefromgd2,imagecreatefromgd2part,imagecreatefromgd,imagecreatefromgif,imagecreatefromjpeg,imagecreatefrompng,imagecreatefromstring,imagecreatefromwbmp,imagecreatefromxbm,imagecreatefromxpm, require,require_once, include,include_once

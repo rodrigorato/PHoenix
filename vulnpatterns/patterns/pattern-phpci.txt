@@ -1,0 +1,4 @@
+PHP Code Injection
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES,$_SERVERS
+mysql_escape_string,mysql_real_escape_string,mysqli_stmt_bind_param,mysqli_stmt::bind_param,db2_escape_string,pg_escape_string,pg_escape_bytea,san_mix,san_osci,htmlentities,htmlspecialchars,strip_tags,urlencode,san_out,san_wdata,san_rdata
+eval

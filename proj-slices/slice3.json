@@ -1,0 +1,94 @@
+{
+  "kind": "program",
+  "children": [
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "idkelas",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "offsetlookup",
+        "what": {
+          "kind": "variable",
+          "name": "_GET",
+          "byref": false,
+          "curly": false
+        },
+        "offset": {
+          "kind": "string",
+          "value": "idk",
+          "isDoubleQuote": false
+        }
+      }
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "show_kelas",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "encapsed",
+        "value": [
+          {
+            "kind": "string",
+            "value": "SELECT * FROM kelas WHERE id_kelas='",
+            "isDoubleQuote": false
+          },
+          {
+            "kind": "variable",
+            "name": "idkelas",
+            "byref": false,
+            "curly": false
+          },
+          {
+            "kind": "string",
+            "value": "'",
+            "isDoubleQuote": false
+          }
+        ],
+        "type": "string"
+      }
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "hasil_kelas",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "call",
+        "what": {
+          "kind": "identifier",
+          "resolution": "uqn",
+          "name": "mysql_query"
+        },
+        "arguments": [
+          {
+            "kind": "variable",
+            "name": "show_kelas",
+            "byref": false,
+            "curly": false
+          },
+          {
+            "kind": "variable",
+            "name": "koneksi",
+            "byref": false,
+            "curly": false
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,64 @@
+File Inclusion/Path Traversal
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES
+san_mix
+fopen,file_get_contents,file,copy,unlink,move_uploaded_file,imagecreatefromgd2,imagecreatefromgd2part,imagecreatefromgd,imagecreatefromgif,imagecreatefromjpeg,imagecreatefrompng,imagecreatefromstring,imagecreatefromwbmp,imagecreatefromxbm,imagecreatefromxpm, require,require_once, include,include_once
+
+OS Command Injection
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES
+san_osci
+passthru,system,shell_exec,exec,pcntl_exec,popen
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+mysql_escape_string,mysql_real_escape_string
+mysqli_query,mysqli_real_query,mysqli_master_query,mysqli_multi_query,mysql_unbuffered_query,mysql_query,mysql_unbuffered_query,mysql_db_query
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+mysqli_stmt_bind_param
+mysqli_stmt_execute,mysqli_execute
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+mysqli::escape_string,mysqli::real_escape_string
+mysqli::query,mysqli::multi_query,mysqli::real_query
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+mysqli_stmt::bind_param
+mysqli_stmt::execute
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+db2_escape_string
+db2_exec
+
+SQL injection
+$_GET,$_POST,$_COOKIE,$_REQUEST
+pg_escape_string,pg_escape_bytea
+pg_query,pg_send_query
+
+Source Code Disclosure
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES
+san_mix
+readfile
+
+PHP Code Injection
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES,$_SERVERS
+mysql_escape_string,mysql_real_escape_string,mysqli_stmt_bind_param,mysqli_stmt::bind_param,db2_escape_string,pg_escape_string,pg_escape_bytea,san_mix,san_osci,htmlentities,htmlspecialchars,strip_tags,urlencode,san_out,san_wdata,san_rdata
+eval
+
+Cross site scripting (XSS)
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES,$_SERVERS
+htmlentities,htmlspecialchars,strip_tags,urlencode,san_out
+echo,print,printf,die,error,exit
+
+Cross site scripting (XSS)
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES,$_SERVERS
+htmlentities,htmlspecialchars,strip_tags,urlencode,san_wdata
+file_put_contents
+
+Cross site scripting (XSS)
+$_GET,$_POST,$_COOKIE,$_REQUEST,$_FILES,$_SERVERS
+htmlentities,htmlspecialchars,strip_tags,urlencode,san_rdata
+file_get_contents
