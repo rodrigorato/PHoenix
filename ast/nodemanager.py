@@ -19,6 +19,16 @@ class NodeManager:
             return ProgramNode(node_json['kind'],
                                children)
 
+        elif 'body' in node_json and 'children' in node_json['body']:
+
+            children = []
+            for child in node_json['body']['children']:
+                children.append(NodeManager.build_node_from_json(child))
+
+            s = "childfull node not implement: " + node_json['kind']
+            print(s)
+            return ChildfulNode(s, children)
+
         else:
             s = "NODE NOT IMPLEMENTED: " + node_json['kind']
             print(s)

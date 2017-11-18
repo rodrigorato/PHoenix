@@ -1,6 +1,6 @@
 class Node:
     def __init__(self, kind):
-        self.kind = kind          # This node's kind
+        self.kind = kind  # This node's kind
 
     def __repr__(self):
         return '<kind:' + self.kind + '>'
