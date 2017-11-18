@@ -5,3 +5,6 @@ class Node():
         self.name = ""      # This node's name
 
 
+class ProgramNode(Node):
+    def __init__(self, param):
+        self.param = param
