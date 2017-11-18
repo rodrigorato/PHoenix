@@ -6,6 +6,5 @@ def main(args):
         print(arg)
 
 
-
 if __name__ == '__main__':
     main(sys.argv[1:])

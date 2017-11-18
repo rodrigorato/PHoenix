@@ -1,5 +1,6 @@
 from ast.nodes import Node
 
+
 class NodeManager:
 
     @staticmethod
