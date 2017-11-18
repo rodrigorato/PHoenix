@@ -4,6 +4,11 @@ from sys import argv
 from inputparser import get_input
 from vulnpatterns.patternmanager import PatternManager
 from jsonhandler import from_json_to_py
+import pprint
+
+
+def pretty(obj):
+    pprint.PrettyPrinter(indent=4).pprint(obj)
 
 
 def main(args):
@@ -14,6 +19,8 @@ def main(args):
 
     # Get the program element from the input file
     program = from_json_to_py(get_input(args))
+
+    pretty(program)
 
 
 if __name__ == '__main__':
