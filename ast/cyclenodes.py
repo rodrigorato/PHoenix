@@ -3,7 +3,7 @@ from ast.nodes import *
 
 class CycleNode(ChildfulNode):
     def __init__(self, kind, children, test):
-        ChildfulNode.__init__(kind, children)
+        ChildfulNode.__init__(self, kind, children)
         self.test = test  # Its an ExpressionNode
 
 
