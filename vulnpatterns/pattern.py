@@ -17,3 +17,14 @@ class Pattern:
     def get_sinks(self):
         return self._sinks
 
+    def __eq__(self, other):
+        if isinstance(other, Pattern):
+            return self._name == other.get_vulnerability_name() and \
+                   self._entry_points == other.get_entry_points() and \
+                   self._sanitization_functions == other.get_sanitization_functions() and \
+                   self._sinks == other.get_sinks()
+        else:
+            return False
+
+
+

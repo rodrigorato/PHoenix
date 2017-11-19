@@ -100,6 +100,7 @@ class ConstantNode(ExpressionNode):
     def __init__(self, kind, value):
         ExpressionNode.__init__(self, kind)
         self.value = value
+        self.tainted = False
 
     def __repr__(self):
         return '<kind:' + self.kind + ',' \
