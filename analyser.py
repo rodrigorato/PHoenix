@@ -26,9 +26,10 @@ def main(args):
     program_node = NodeManager.build_node_from_json(program)
 
     program_repr = program_node.__repr__()
-    print("YARRR OUR PROGRAM BE:", program_repr)
-    print("\n\n")
-    print("AND ITS ANALYSIS BE:", program_node.do_static_analysis())
+
+    p = program_node.do_static_analysis()
+
+    #print("YARRR OUR PROGRAM BE:", program_repr)
 
 
 if __name__ == '__main__':
