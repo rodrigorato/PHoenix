@@ -33,9 +33,6 @@ class AttributionNode(ExpressionNode):
 
         # Record that we learned this (un)taintness and return it out
         return self.knowledge
-        # TODO
-        # TODO
-        # TODO
 
 
 
@@ -155,9 +152,14 @@ class ConstantNode(ExpressionNode):
     def __repr__(self):
         return '<kind:' + self.kind + ', id:' + str(self.id) + ', value: ' + pretty_format(self.value) + '>'
 
-    # This node is always safe, do nothing
+    # This node is always safe, clear its tainted patterns
     def is_tainted(self, knowledge):
-        return knowledge
+
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        knowledge.kinds[self.kind].nodes[self.id] = []
+
+        return self.knowledge
 
 
 class EncapsedStringNode(ExpressionNode):

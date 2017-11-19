@@ -25,42 +25,42 @@ from collections import defaultdict
 # Is an abstraction for the inner dicts
 class TaintKnowledge:
     def __init__(self):
-        self.__nodes_to_patterns = defaultdict(list)
+        self.nodes = defaultdict(list)
 
     def get_patterns_for_node(self, node_name):
-        return self.__nodes_to_patterns[node_name]
+        return self.nodes[node_name]
 
     def __getitem__(self, item):
-        return self.__nodes_to_patterns[item]
+        return self.nodes[item]
 
     def add_pattern_for_node(self, node_name, pattern):
-        if pattern not in self.__nodes_to_patterns[node_name]:
-            self.__nodes_to_patterns[node_name].append(pattern)
+        if pattern not in self.nodes[node_name]:
+            self.nodes[node_name].append(pattern)
 
     def remove_pattern_from_node(self, node_name, sanitization_func_name):
         new_patterns = []
 
-        for pattern in self.__nodes_to_patterns[node_name]:
+        for pattern in self.nodes[node_name]:
             if sanitization_func_name not in pattern.get_sanitization_functions():
                 new_patterns.append(pattern)
 
-        self.__nodes_to_patterns[node_name] = new_patterns
+        self.nodes[node_name] = new_patterns
 
     def get_names(self):
-        return self.__nodes_to_patterns.keys()
+        return self.nodes.keys()
 
     def __repr__(self):
         s = '<TAINT-KNOWLEDGE: '
         #s += [str(key) for key in self.__nodes_to_patterns.keys()].__repr__(
-        for key in self.__nodes_to_patterns.keys():
+        for key in self.nodes.keys():
             s += '<' + key + ': '
-            s += self.__nodes_to_patterns[key].__repr__() + '>, '
+            s += self.nodes[key].__repr__() + '>, '
         s += '>'
         return s
 
     def is_empty(self):
-        for key in self.__nodes_to_patterns.keys():
-            if self.__nodes_to_patterns[key]:
+        for key in self.nodes.keys():
+            if self.nodes[key]:
                 return False
         return True
 
@@ -73,34 +73,34 @@ class TaintKnowledge:
 # An abstraction for the outer dict
 class KindKnowledge:
     def __init__(self):
-        self.__kinds = defaultdict(TaintKnowledge)
+        self.kinds = defaultdict(TaintKnowledge)
 
         # A dict of FunctionDefinitionNodes mapped by their names
         # FIXME storing as object to avoid cyclic dependencies
         self.function_def_nodes = defaultdict(object)
 
     def get_kinds(self):
-        return self.__kinds.keys()
+        return self.kinds.keys()
 
     def get_taint_knowledge(self, key):
-        return self.__kinds[key]
+        return self.kinds[key]
 
     def __getitem__(self, item):
-        return self.__kinds[item]
+        return self.kinds[item]
 
-    def add_pattern_to_kind_node(self, kind, node_name, pattern):
-        self[kind].add_pattern_for_node(node_name, pattern)
+    def add_pattern_to_kind_node(self, kind, node_name_or_id, pattern):
+        self[kind].add_pattern_for_node(node_name_or_id, pattern)
 
     def __repr__(self):
         s = '<KIND-KNOWLEDGE: '
-        for kind in self.__kinds:
-            s += self.__kinds[kind].__repr__()
+        for kind in self.kinds:
+            s += self.kinds[kind].__repr__()
         s += '>'
         return s
 
     def is_empty(self):
-        for kind in self.__kinds:
-            if not self.__kinds[kind].is_empty():
+        for kind in self.kinds:
+            if not self.kinds[kind].is_empty():
                 return False
         return True
 
@@ -108,7 +108,7 @@ class KindKnowledge:
         return self.is_empty()
 
     def remove_pattern_from_kind_node(self, kind_name, node_name, sanitization_function_name):
-        self.__kinds[kind_name].remove_pattern_from_node(self, node_name, sanitization_function_name)
+        self.kinds[kind_name].remove_pattern_from_node(self, node_name, sanitization_function_name)
 
 
     # FIXME assuming no two dict entries have the same key
