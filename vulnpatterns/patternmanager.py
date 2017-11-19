@@ -7,6 +7,13 @@ class PatternManager:
         self._patterns = patternhandler.load_patterns()
         self._sinks_to_patterns = defaultdict(list)
         self._sinks = self.filter_sinks()
+        self._unique_patterns_list = []
+
+        for pattern in self._patterns:
+            for entry_point in pattern._entry_points:
+                if entry_point not in self._unique_patterns_list:
+                    self._unique_patterns_list.append(entry_point)
+
 
     """
         @return a list of all sinks without a repeated one
@@ -36,6 +43,10 @@ class PatternManager:
 
     def get_patterns(self):
         return self._patterns
+
+    def get_unique_patterns_list(self):
+        return self._unique_patterns_list
+
 
     """
         @param a list of sinks that we're interested in
