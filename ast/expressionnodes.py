@@ -148,9 +148,9 @@ class EntryPointNode(VariableNode):
     # This node bad, load its tainted patterns
     def is_tainted(self, knowledge):
 
-        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
-
         knowledge.kinds[self.kind].nodes[self.id] = []
+
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
         return self.knowledge
 

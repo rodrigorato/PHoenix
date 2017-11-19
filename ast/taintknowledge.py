@@ -30,8 +30,6 @@ class TaintKnowledge:
     def get_patterns_for_node(self, node_name):
         return self.nodes[node_name]
 
-    def __getitem__(self, item):
-        return self.nodes[item]
 
     def add_pattern_for_node(self, node_name, pattern):
         if pattern not in self.nodes[node_name]:
@@ -51,11 +49,10 @@ class TaintKnowledge:
 
     def __repr__(self):
         s = '<TAINT-KNOWLEDGE: '
-        #s += [str(key) for key in self.__nodes_to_patterns.keys()].__repr__(
-        for key in self.nodes.keys():
-            s += '<' + key + ': '
-            s += self.nodes[key].__repr__() + '>, '
+        for elem in self.nodes:
+            s += '<' + elem.__repr__() + '>'
         s += '>'
+
         return s
 
     def is_empty(self):
@@ -85,11 +82,8 @@ class KindKnowledge:
     def get_taint_knowledge(self, key):
         return self.kinds[key]
 
-    def __getitem__(self, item):
-        return self.kinds[item]
-
     def add_pattern_to_kind_node(self, kind, node_name_or_id, pattern):
-        self[kind].add_pattern_for_node(node_name_or_id, pattern)
+        self.kinds[kind].add_pattern_for_node(node_name_or_id, pattern)
 
     def __repr__(self):
         s = '<KIND-KNOWLEDGE: '
@@ -128,6 +122,7 @@ class KindKnowledge:
 
     @staticmethod
     def union(this, that):
+
         # Check when that == None (or empty)
         if isinstance(this, KindKnowledge) and that is None:
             this.function_def_nodes = KindKnowledge.union_dicts(this.function_def_nodes,
@@ -135,17 +130,18 @@ class KindKnowledge:
             return this
 
         # Check when this == None (or empty)
-        if isinstance(that, KindKnowledge) and this is None:
+        elif isinstance(that, KindKnowledge) and this is None:
             that.function_def_nodes = KindKnowledge.union_dicts(this.function_def_nodes,
                                                                 that.function_def_nodes)
             return that
 
         # Get the 'union' of two KindKnowledges
         # e.g. {a, b} U {c, d} = {a, b, c, d}
-        for kind in that.get_kinds():
-            for node in that[kind]:
-                for pattern in that[kind][node]:
-                    this.add_pattern_to_kind_node(kind, node, pattern)
+
+        for kind, tmp1 in that.kinds.items():
+            for node_id, tmp2 in that.kinds[kind].nodes.items():
+                for pattern in that.kinds[kind].nodes[node_id]:
+                    this.add_pattern_to_kind_node(kind, node_id, pattern)
 
         this.function_def_nodes = KindKnowledge.union_dicts(this.function_def_nodes,
                                                             that.function_def_nodes)
