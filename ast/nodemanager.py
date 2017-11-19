@@ -27,12 +27,15 @@ def build_children(children_list):
         children.append(NodeManager.build_node_from_json(child))
     return children
 
+p = PatternManager()
 
-list_of_entry_points = PatternManager().get_unique_patterns_list()
+list_of_patterns = p.get_patterns()
 
-sinks_to_patterns = PatternManager().get_sinks_to_patterns()
+list_of_entry_points = p.get_unique_patterns_list()
 
-sanitizations_to_patterns = PatternManager().get_sanitizations_to_patterns()
+sinks_to_patterns = p.get_sinks_to_patterns()
+
+sanitizations_to_patterns = p.get_sanitizations_to_patterns()
 
 
 class NodeManager:
@@ -154,8 +157,15 @@ class NodeManager:
         elif is_kind(node_json, 'variable'):
 
             if ('$' + node_json['name']) in list_of_entry_points:
+
+                patterns = []
+                for pattern in list_of_patterns:
+                    if '$' + node_json['name'] in pattern._entry_points:
+                        patterns.append(pattern)
+
                 return EntryPointNode(node_json['kind'],
-                                      node_json['name'])
+                                      node_json['name'],
+                                      patterns)
             else:
                 return VariableNode(node_json['kind'],
                                     node_json['name'])

@@ -17,6 +17,8 @@ class PatternManager:
                     self._unique_patterns_list.append(entry_point)
 
 
+
+
     """
         @return a list of all sinks without a repeated one
     """

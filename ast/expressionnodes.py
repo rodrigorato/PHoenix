@@ -132,15 +132,27 @@ class FunctionCallNode(ExpressionNode):
 
             return self.knowledge
 
+
 # Stuff like $_GET and $_POST
 class EntryPointNode(VariableNode):
-    def __init__(self, kind, name):
+    def __init__(self, kind, name, patterns):
         VariableNode.__init__(self, kind, name)
         self.tainted = True
         self.visited = True
+        self.patterns = patterns  # A list of patterns vulnerable to these entry points
 
     def __repr__(self):
-        return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + '>'
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + ', ' \
+                'patterns: ' + self.patterns.__repr__() + '>'
+
+    # This node bad, load its tainted patterns
+    def is_tainted(self, knowledge):
+
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        knowledge.kinds[self.kind].nodes[self.id] = []
+
+        return self.knowledge
 
 
 class ConstantNode(ExpressionNode):
