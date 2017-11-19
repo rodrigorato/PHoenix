@@ -30,9 +30,9 @@ def build_children(children_list):
 
 list_of_entry_points = PatternManager().get_unique_patterns_list()
 
-sinks_to_patterns = {}  # PatternManager().get_sinks_to_patterns()
+sinks_to_patterns = PatternManager().get_sinks_to_patterns()
 
-sanitizations_to_patterns = {}  # PatternManager().get_sanitizations_to_patterns()
+sanitizations_to_patterns = PatternManager().get_sanitizations_to_patterns()
 
 
 class NodeManager:

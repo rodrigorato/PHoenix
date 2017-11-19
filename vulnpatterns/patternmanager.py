@@ -5,13 +5,14 @@ from collections import defaultdict
 class PatternManager:
     def __init__(self):
         self._patterns = patternhandler.load_patterns()
+        self._unique_patterns_list = []
         self._sinks_to_patterns = defaultdict(list)
         self._sinks = self.filter_sinks()
-        self._unique_patterns_list = []
+        self._sanitizations = self.filter_sanitizations()
         self._sanits_to_patterns = defaultdict(list)
 
         for pattern in self._patterns:
-            for entry_point in pattern._entry_points:
+            for entry_point in pattern.get_entry_points():
                 if entry_point not in self._unique_patterns_list:
                     self._unique_patterns_list.append(entry_point)
 
@@ -39,6 +40,26 @@ class PatternManager:
 
         return sinks
 
+    """
+        @return a list of all sinks without a repeated one
+    """
+    def filter_sanitizations(self):
+        sanitizations = []
+
+        """
+            For each sanitization in each pattern:
+              - Add it to the sanitization list
+              - Add it to the _sanitizations_to_patterns dictionary, building it here
+        """
+        for pattern in self.get_patterns():
+            for sanitization in pattern.get_sanitization_functions():
+
+                # Checks if sanitization is already in the list
+                if sanitization not in sanitizations:
+                    sanitizations.append(sanitization)
+
+        return sanitizations
+
     def get_all_sinks(self):
         return self._sinks
 
@@ -64,14 +85,36 @@ class PatternManager:
     def get_sanitizations_to_patterns_dict(self, sanits):
         sanits_to_patterns_dict = defaultdict(list)
 
+        patterns = self.get_unique_patterns_list()
+
         for sanit in sanits:
             sanits_to_patterns_dict[sanit].append(self._sanits_to_patterns[sanit])
 
         return sanits_to_patterns_dict
 
-    def test():
-        for pattern in get_patterns():
-            print(pattern.get_vulnerability_name())
-            print(pattern.get_entry_points())
-            print(pattern.get_sanitization_functions())
-            print(pattern.get_sinks(), "\n")
+    """
+        @return a dict that maps sinks to patterns
+    """
+    def get_sinks_to_patterns(self):
+        sinks_to_patterns = defaultdict(list)
+
+        for sink in self._sinks:
+            for pattern in self._patterns:
+                if sink in pattern.get_sinks():
+                    sinks_to_patterns[sink].append(pattern)
+
+        return sinks_to_patterns
+
+    """
+        @param a list of sinks that we're interested in
+        @return a dict that maps sinks to patterns
+    """
+    def get_sanitizations_to_patterns(self):
+        sanitizations_to_patterns = defaultdict(list)
+
+        for sanitization in self._sanitizations:
+            for pattern in self.get_patterns():
+                if sanitization in pattern.get_sanitization_functions():
+                    sanitizations_to_patterns[sanitization].append(pattern)
+
+        return sanitizations_to_patterns
