@@ -7,14 +7,19 @@ def pretty_format(obj):
 
 
 class Node:
+    id = 0
     def __init__(self, kind):
         self.kind = kind      # This node's kind
         self.tainted = False  # FIXME assuming its good until an entry point is found
         self.visited = False  # has this node been visited already?
         self.knowledge = KindKnowledge()
 
+        # Increment this node's ID
+        self.id = Node.id
+        Node.id += 1
+
     def __repr__(self):
-        return '<kind:' + self.kind + ', taint-knowledge:' + pretty_format(self.is_tainted(self.knowledge)) + '>'
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ',  taint-knowledge:' + pretty_format(self.is_tainted(self.knowledge)) + '>'
 
     def is_tainted(self, knowledge):
         # FIXME check if all we need to do is update with the previous knowledge
@@ -30,7 +35,7 @@ class ChildfulNode(Node):
         self.children = children
 
     def __repr__(self):
-        return '<kind:' + self.kind + ', children:' + pretty_format(self.children) + '>'
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', children:' + pretty_format(self.children) + '>'
 
     def is_tainted(self, knowledge):
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)

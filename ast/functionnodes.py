@@ -15,8 +15,7 @@ class FunctionDefinitionNode(ChildfulNode):
         self.arguments = arguments  # arguments is a list of VariableNodes
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'name: ' + self.name + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + ',' \
                 'arguments: ' + pretty_format(self.arguments) + ',' \
                 'children: ' + pretty_format(self.children) + '>'
 
@@ -39,6 +38,5 @@ class FunctionDefinitionArgumentsNode(VariableNode):
         self.value_expr = value_expr
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'name: ' + self.name + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + ',' \
                 'value_expr: ' + pretty_format(self.value_expr) + '>'

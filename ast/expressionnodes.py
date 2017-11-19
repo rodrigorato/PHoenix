@@ -21,10 +21,9 @@ class AttributionNode(ExpressionNode):
         self.right_expr = right_expr
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'left_expr: ' + pretty_format(self.left_expr) + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', left_expr: ' + pretty_format(self.left_expr) + ',' \
                 'right_expr: ' + pretty_format(self.right_expr) + '>'
-"""
+
     def is_tainted(self, knowledge):
 
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
@@ -33,8 +32,11 @@ class AttributionNode(ExpressionNode):
         self.knowledge = self.right_expr.is_tainted(self.knowledge)
 
         # Record that we learned this (un)taintness and return it out
-        self.knowledge
-"""
+        return self.knowledge
+        # TODO
+        # TODO
+        # TODO
+
 
 
 class UnaryExpression(ExpressionNode):
@@ -44,8 +46,7 @@ class UnaryExpression(ExpressionNode):
         self.expr = expr    # Every Unary expression has an expression associated with it
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'type: ' + pretty_format(self.type) + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', type: ' + pretty_format(self.type) + ',' \
                 'expr: ' + pretty_format(self.expr) + '>'
 
 
@@ -57,8 +58,7 @@ class BinaryExpression(ExpressionNode):
         self.right_expr = right_expr    # right expression!
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'type: ' + pretty_format(self.type) + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', type: ' + pretty_format(self.type) + ',' \
                 'left_expr: ' + pretty_format(self.left_expr) + ',' \
                 'right_expr: ' + pretty_format(self.right_expr) + '>'
 
@@ -71,8 +71,7 @@ class TernaryExpression(ExpressionNode):
         self.false_expr = false_expr
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'test: ' + pretty_format(self.test) + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', test: ' + pretty_format(self.test) + ',' \
                 'true_expr: ' + pretty_format(self.true_expr) + ',' \
                 'false_expr: ' + pretty_format(self.false_expr) + '>'
 
@@ -85,9 +84,9 @@ class VariableNode(ExpressionNode):
         self.name = name
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'name: ' + self.name + '>'
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + '>'
 
+    # TODO check if nothing is needed here as we kind of assumed it
 
 # FIXME assumption - we're not handling indexation calls
 # so $a[1]("ha"); isn't handled
@@ -98,8 +97,7 @@ class FunctionCallNode(ExpressionNode):
         self.arguments = arguments  # arguments is a list of ExpressionNodes
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'name: ' + self.name + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + ',' \
                 'arguments: ' + pretty_format(self.arguments) + '>'
 
     # FIXME assuming that a function call to a function not defined here is safe
@@ -145,8 +143,7 @@ class EntryPointNode(VariableNode):
         self.visited = True
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'name: ' + self.name + '>'
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + '>'
 
 
 class ConstantNode(ExpressionNode):
@@ -156,8 +153,11 @@ class ConstantNode(ExpressionNode):
         self.tainted = False
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'value: ' + pretty_format(self.value) + '>'
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', value: ' + pretty_format(self.value) + '>'
+
+    # This node is always safe, do nothing
+    def is_tainted(self, knowledge):
+        return knowledge
 
 
 class EncapsedStringNode(ExpressionNode):

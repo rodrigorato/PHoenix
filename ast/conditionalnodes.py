@@ -14,8 +14,7 @@ class IfThenElseNode(ChildfulNode):
         self.alternate = alternate  # A IfThenElse node, an ElseNode or None
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-               'children:' + pretty_format(self.children) + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', children:' + pretty_format(self.children) + ',' \
                + (pretty_format(self.alternate) if self.alternate else '') + '>'
 
     def is_tainted(self, knowledge):
@@ -59,8 +58,7 @@ class SwitchNode(ChildfulNode):
         self.test = test
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-               'test: ' + pretty_format(self.test) + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', test: ' + pretty_format(self.test) + ',' \
                'body: ' + pretty_format(self.children) + '>'
 
     def is_tainted(self, knowledge):
@@ -81,8 +79,7 @@ class CaseNode(ChildfulNode):
         self.test = test
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-               'test: ' + pretty_format(self.test) + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', test: ' + pretty_format(self.test) + ',' \
                'body: ' + pretty_format(self.children) + '>'
 
     def is_tainted(self, knowledge):

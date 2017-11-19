@@ -12,8 +12,7 @@ class CycleNode(ChildfulNode):
         self.test = test  # Its an ExpressionNode
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-               'test: ' + pretty_format(self.test) + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', test: ' + pretty_format(self.test) + ',' \
                'children: ' + pretty_format(self.children) + '>'
 
     # FIXME assuming when a cycle is ran the test runs first
@@ -69,8 +68,7 @@ class ForNode(CycleNode):
         self.increment = increment  # Its a list of ExpressionNodes
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',' \
-                'init: ' + pretty_format(self.init) + ',' \
+        return '<kind:' + self.kind + ', id:' + str(self.id) + ', init: ' + pretty_format(self.init) + ',' \
                 'test: ' + pretty_format(self.test) + ',' \
                 'increment: ' + pretty_format(self.increment) + ',' + \
                 'children: ' + pretty_format(self.children) + '>'
