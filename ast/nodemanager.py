@@ -47,10 +47,14 @@ class NodeManager:
             # Build it's children nodes as a list
             children = build_children(node_json['body']['children'])
 
-            # Check for alternate (i.e. the else)
+            # Check for alternate (i.e. an else if)
             alternate_node = None
             if 'alternate' in node_json and node_json['alternate']:
-                alternate_node = NodeManager.build_node_from_json(node_json['alternate'])
+                if node_json['alternate']['kind'] == 'block':
+                    alternate_node = ElseNode(node_json['alternate']['kind'],
+                                              build_children(node_json['alternate']['children']))
+                else:
+                    alternate_node = NodeManager.build_node_from_json(node_json['alternate'])
 
             return IfThenElseNode(node_json['kind'],
                                   NodeManager.build_node_from_json(node_json['test']),
@@ -140,11 +144,23 @@ class NodeManager:
                 return VariableNode(node_json['kind'],
                                     node_json['name'])
 
+        # Handles the EncapsedStringNode
+        elif is_kind(node_json, 'encapsed'):
+
+            return EncapsedStringNode(node_json['kind'],
+                                      build_children(node_json['value']),
+                                      node_json['type'])
+
         # Handles FunctionCallNode
-        elif is_kind(node_json, 'call'):
+        # FIXME We're assuming echo is a normal Function call
+        elif is_kinds(node_json, ('call', 'echo')):
+
+            name = None
+            if node_json['kind'] == 'echo':
+                name = node_json['kind']
 
             return FunctionCallNode(node_json['kind'],
-                                    node_json['what']['name'],
+                                    name if name else node_json['what']['name'],
                                     build_children(node_json['arguments']))
 
         # Handles the ConstantNode

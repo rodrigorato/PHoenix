@@ -105,3 +105,9 @@ class ConstantNode(ExpressionNode):
         return '<kind:' + self.kind + ',' \
                 'value: ' + pretty_format(self.value) + '>'
 
+
+class EncapsedStringNode(ExpressionNode):
+    def __init__(self, kind, value, type):
+        ExpressionNode.__init__(self, kind)
+        self.value = value  # Value is a list of ExpressionNodes
+        self.type = type  # FIXME assuming only string is possible
