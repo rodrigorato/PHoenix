@@ -89,10 +89,12 @@ class FunctionCallNode(ExpressionNode):
                 'name: ' + self.name + ',' \
                 'arguments: ' + pretty_format(self.arguments) + '>'
 
+    # FIXME assuming that a function call to a function not defined here is safe
     def is_tainted(self, knowledge):
 
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
+        # We have the function definition
         if self.name in self.knowledge.function_def_nodes:
             func_def_node = self.knowledge.function_def_nodes[self.name]
 
@@ -105,6 +107,15 @@ class FunctionCallNode(ExpressionNode):
 
             func_def_node.is_tainted()
 
+        # The function isnt defined here
+        # FIXME we're assuming it is safe
+        else:
+
+            # Evaluate the current arguments as they are expressions
+            for argument in self.arguments:
+                self.knowledge = argument.is_tainted(self.knowledge)
+
+            return self.knowledge
 
 # Stuff like $_GET and $_POST
 class EntryPointNode(VariableNode):

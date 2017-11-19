@@ -2,7 +2,8 @@ from ast.nodes import ProgramNode, ChildfulNode, Node
 from ast.conditionalnodes import IfThenElseNode, SwitchNode, CaseNode, ElseNode
 from ast.cyclenodes import WhileNode, DoWhileNode, ForNode
 from ast.expressionnodes import AttributionNode, UnaryExpression, BinaryExpression, TernaryExpression, \
-                                EntryPointNode, VariableNode, EncapsedStringNode, FunctionCallNode, ConstantNode
+                                EntryPointNode, VariableNode, EncapsedStringNode, FunctionCallNode, ConstantNode, \
+                                SinkCallNode, SanitizationCallNode
 from ast.functionnodes import FunctionDefinitionNode, FunctionDefinitionArgumentsNode
 
 
@@ -29,6 +30,9 @@ def build_children(children_list):
 
 list_of_entry_points = PatternManager().get_unique_patterns_list()
 
+sinks_to_patterns = {}  # PatternManager().get_sinks_to_patterns()
+
+sanitizations_to_patterns = {}  # PatternManager().get_sanitizations_to_patterns()
 
 
 class NodeManager:
@@ -166,6 +170,23 @@ class NodeManager:
         # Handles FunctionCallNode, SinkCallNode and SanitizationCallNode
         # FIXME We're assuming echo is a normal Function call
         elif is_kinds(node_json, ('call', 'echo')):
+
+            # Check if its a Sink or Sanitization function call
+            if is_kind(node_json, 'call'):
+                if node_json['what']['name'] in sinks_to_patterns:
+                    # Create a SinkCallNode
+                    return SinkCallNode(node_json['kind'],
+                                        node_json['what']['name'],
+                                        build_children(node_json['arguments']),
+                                        sinks_to_patterns[node_json['what']['name']])
+
+                elif node_json['what']['name'] in sanitizations_to_patterns:
+                    # Create a SanitizationCallNode
+                    return SanitizationCallNode(node_json['kind'],
+                                                node_json['what']['name'],
+                                                build_children(node_json['arguments']),
+                                                sanitizations_to_patterns[node_json['what']['name']])
+
 
             name = None
             if node_json['kind'] == 'echo':
