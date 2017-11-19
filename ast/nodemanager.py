@@ -160,6 +160,7 @@ class NodeManager:
 
                 patterns = []
                 for pattern in list_of_patterns:
+
                     if ('$' + node_json['name']) in pattern.get_entry_points():
                         patterns.append(pattern)
 
@@ -182,7 +183,7 @@ class NodeManager:
         elif is_kinds(node_json, ('call', 'echo')):
 
             # Check if its a Sink or Sanitization function call
-            if is_kind(node_json, 'call'):
+            if is_kinds(node_json, ('call')):
                 if node_json['what']['name'] in sinks_to_patterns:
                     # Create a SinkCallNode
                     return SinkCallNode(node_json['kind'],
@@ -197,6 +198,20 @@ class NodeManager:
                                                 build_children(node_json['arguments']),
                                                 sanitizations_to_patterns[node_json['what']['name']])
 
+            elif is_kind(node_json, 'echo'):
+                if node_json['kind'] in sinks_to_patterns:
+                    # Create a SinkCallNode
+                    return SinkCallNode(node_json['kind'],
+                                        node_json['kind'],
+                                        build_children(node_json['arguments']),
+                                        sinks_to_patterns[node_json['kind']])
+
+                elif node_json['kind'] in sanitizations_to_patterns:
+                    # Create a SanitizationCallNode
+                    return SanitizationCallNode(node_json['kind'],
+                                                node_json['kind'],
+                                                build_children(node_json['arguments']),
+                                                sanitizations_to_patterns[node_json['kind']])
 
             name = None
             if node_json['kind'] == 'echo':

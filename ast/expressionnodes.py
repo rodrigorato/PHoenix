@@ -182,9 +182,15 @@ class EntryPointNode(VariableNode):
     # This node bad, load its tainted patterns
     def is_tainted(self, knowledge):
 
+        indexation_name_or_id = ""
+        if hasattr(self, 'name'):
+            indexation_name_or_id = self.name
+        else:
+            indexation_name_or_id = self.id
+
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
-        self.knowledge.kinds[self.kind].nodes[self.id] = self.patterns
+        self.knowledge.kinds[self.kind].nodes[indexation_name_or_id].append(self.patterns)
 
         return self.knowledge
 
@@ -248,6 +254,9 @@ class SinkCallNode(FunctionCallNode):
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
         for arg in self.arguments:
+            self.knowledge = arg.is_tainted(self.knowledge)
+
+        for arg in self.arguments:
 
             indexation_name_or_id = ""
             if hasattr(arg, 'name'):
@@ -256,17 +265,20 @@ class SinkCallNode(FunctionCallNode):
                 indexation_name_or_id = arg.id
 
             patterns_lists = self.knowledge.kinds[arg.kind].nodes[indexation_name_or_id]
+
             for patterns_list in patterns_lists:
                 for pattern in patterns_list:
                     #print("AAAAAAAAAAAAAAAAAAAAAAAAAA", pattern.__repr__())
                     sinks_list = pattern.get_sinks()
+                    #print(sinks_list.__repr__())
+                    #print(self.name)
                     if self.name in sinks_list:
                         print("====================================================================")
                         print("                           VULNERABILITY                            ")
                         print("                               FOUND                                ")
                         print("                                                                    ")
                         print("Vulnerability Name: " + pattern.get_vulnerability_name().__repr__())
-                        print("Possible sanitizations " + pattern.get_sanitization_functions().__repr__())
+                        print("Possible sanitizations: " + pattern.get_sanitization_functions().__repr__())
                         print("====================================================================")
 
             #print("acabei")
