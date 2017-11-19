@@ -9,8 +9,8 @@ class IfThenElseNode(ChildfulNode):
         self.alternate = alternate  # A IfThenElse node or None
 
     def __repr__(self):
-        return '<kind:' + self.kind + ',\n' \
-               'children:' + pretty_format(self.children) + ',\n' \
+        return '<kind:' + self.kind + ',' \
+               'children:' + pretty_format(self.children) + ',' \
                + (pretty_format(self.alternate) if self.alternate else '') + '>'
 
 
@@ -20,10 +20,18 @@ class SwitchNode(ChildfulNode):
         ChildfulNode.__init__(self, kind, body)
         self.test = test
 
+    def __repr__(self):
+        return '<kind:' + self.kind + ',' \
+               'test: ' + pretty_format(self.test) + ',' \
+               'body: ' + pretty_format(self.children) + '>'
+
 
 class CaseNode(ChildfulNode):
     def __init__(self, kind, test, body):
         ChildfulNode.__init__(self, kind, body)
         self.test = test
 
-
+    def __repr__(self):
+        return '<kind:' + self.kind + ',' \
+               'test: ' + pretty_format(self.test) + ',' \
+               'body: ' + pretty_format(self.children) + '>'
