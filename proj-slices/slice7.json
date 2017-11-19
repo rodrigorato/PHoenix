@@ -87,7 +87,7 @@
         },
         "right": {
           "kind": "variable",
-          "name": "query",
+          "name": "query2",
           "byref": false,
           "curly": false
         }

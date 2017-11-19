@@ -87,12 +87,10 @@
               "curly": false
             },
             "right": {
-              "kind": "constref",
-              "name": {
-                "kind": "identifier",
-                "resolution": "uqn",
-                "name": "arg2"
-              }
+              "kind": "variable",
+              "name": "arg2",
+              "byref": false,
+              "curly": false
             }
           },
           {
