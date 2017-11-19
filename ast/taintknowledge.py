@@ -107,7 +107,6 @@ class KindKnowledge:
     def __bool__(self):
         return self.is_empty()
 
-
     def remove_pattern_from_kind_node(self, kind_name, node_name, sanitization_function_name):
         self.__kinds[kind_name].remove_pattern_from_node(self, node_name, sanitization_function_name)
 
@@ -127,18 +126,16 @@ class KindKnowledge:
 
         return that_dict
 
-
     @staticmethod
     def union(this, that):
-
         # Check when that == None (or empty)
-        if this and not that:
+        if isinstance(this, KindKnowledge) and that is None:
             this.function_def_nodes = KindKnowledge.union_dicts(this.function_def_nodes,
                                                                 that.function_def_nodes)
             return this
 
         # Check when this == None (or empty)
-        if that and not this:
+        if isinstance(that, KindKnowledge) and this is None:
             that.function_def_nodes = KindKnowledge.union_dicts(this.function_def_nodes,
                                                                 that.function_def_nodes)
             return that

@@ -12,6 +12,8 @@ class ExpressionNode(Node):
         Node.__init__(self, kind)
 
 
+# FIXME assume left_expr is only a variable
+# FIXME not considering indexations
 class AttributionNode(ExpressionNode):
     def __init__(self, kind, left_expr, right_expr):
         ExpressionNode.__init__(self, kind)
@@ -22,6 +24,17 @@ class AttributionNode(ExpressionNode):
         return '<kind:' + self.kind + ',' \
                 'left_expr: ' + pretty_format(self.left_expr) + ',' \
                 'right_expr: ' + pretty_format(self.right_expr) + '>'
+"""
+    def is_tainted(self, knowledge):
+
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        # Evaluate the right expression
+        self.knowledge = self.right_expr.is_tainted(self.knowledge)
+
+        # Record that we learned this (un)taintness and return it out
+        self.knowledge
+"""
 
 
 class UnaryExpression(ExpressionNode):
@@ -96,6 +109,13 @@ class FunctionCallNode(ExpressionNode):
 
         # We have the function definition
         if self.name in self.knowledge.function_def_nodes:
+            # TODO
+            # TODO
+            # TODO Function definition case
+            # TODO
+            # TODO
+            # TODO
+
             func_def_node = self.knowledge.function_def_nodes[self.name]
 
             knowledge_for_func_call = self.knowledge
