@@ -17,15 +17,19 @@ def pretty(obj):
 def main(args):
 
     # Get the patterns to check for
-    pattern_manager = PatternManager()
-    patterns = pattern_manager.get_patterns()
+    #pattern_manager = PatternManager()
+    #patterns = pattern_manager.get_patterns()
 
     # Get the program element from the input file
     program = from_json_to_py(get_input(args))
 
     program_node = NodeManager.build_node_from_json(program)
 
-    print(program_node)
+    program_repr = program_node.__repr__()
+
+    p = program_node.do_static_analysis()
+
+    #print("YARRR OUR PROGRAM BE:", program_repr)
 
 
 if __name__ == '__main__':
