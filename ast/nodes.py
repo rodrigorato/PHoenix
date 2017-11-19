@@ -1,4 +1,5 @@
 import pprint
+from ast.taintknowledge import *
 
 
 def pretty_format(obj):
@@ -8,11 +9,18 @@ def pretty_format(obj):
 class Node:
     def __init__(self, kind):
         self.kind = kind      # This node's kind
-        self.tainted = True   # FIXME assuming its good until an entry point is found
+        self.tainted = False  # FIXME assuming its good until an entry point is found
         self.visited = False  # has this node been visited already?
+        self.knowledge = KindKnowledge()
 
     def __repr__(self):
-        return '<kind:' + self.kind + '>'
+        return '<kind:' + self.kind + ', taint-knowledge:' + pretty_format(self.is_tainted(self.knowledge)) + '>'
+
+    def is_tainted(self, knowledge):
+        # FIXME check if all we need to do is update with the previous knowledge
+        self.knowledge = knowledge
+        return self.knowledge
+
 
 
 # This is just a fancy name for an abstraction of a node that has child nodes
@@ -25,10 +33,25 @@ class ChildfulNode(Node):
     def __repr__(self):
         return '<kind:' + self.kind + ', children:' + pretty_format(self.children) + '>'
 
+    def is_tainted(self, knowledge):
+
+        # For this node all we need to do is update our knowledge
+        # with the knowledge from all our children
+        for child in self.children:
+            self.knowledge = child.is_tainted(knowledge)
+
+        return self.knowledge
+
 
 class ProgramNode(ChildfulNode):
     def __init__(self, kind, children):
         ChildfulNode.__init__(self, kind, children)
+
+    # Taint analysis bootstraping:
+    # The ProgramNode is the first to be analysed and has no previous knowledge.
+    def do_static_analysis(self):
+        self.knowledge = self.is_tainted(self.knowledge)
+        return self.knowledge
 
 
 """

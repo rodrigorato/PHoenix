@@ -58,6 +58,16 @@ class TaintKnowledge:
         s += '>'
         return s
 
+    def is_empty(self):
+        for key in self.__nodes_to_patterns.keys():
+            if self.__nodes_to_patterns[key]:
+                return False
+        return True
+
+    def __bool__(self):
+        return not self.is_empty()
+
+
 
 # FIXME assuming node_kinds and node_names are strings
 # FIXME tainted_by_patternI is a Pattern object
@@ -84,6 +94,16 @@ class KindKnowledge:
             s += self.__kinds[kind].__repr__()
         s += '>'
         return s
+
+    def is_empty(self):
+        for kind in self.__kinds:
+            if not self.__kinds[kind].is_empty():
+                return False
+        return True
+
+    def __bool__(self):
+        return self.is_empty()
+
 
     def remove_pattern_from_kind_node(self, kind_name, node_name, sanitization_function_name):
         self.__kinds[kind_name].remove_pattern_from_node(self, node_name, sanitization_function_name)
