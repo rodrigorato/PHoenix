@@ -110,14 +110,14 @@ class TernaryExpression(ExpressionNode):
 # FIXME assumption - an indexation is a variable
 # so $a[1] is a variable node
 class VariableNode(ExpressionNode):
-    def __init__(self, kind, name):
+    def __init__(self, kind, name, patterns_list):
         ExpressionNode.__init__(self, kind)
         self.name = name
+        self.patterns_list = patterns_list
 
     def __repr__(self):
         return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + '>'
 
-    # TODO check if nothing is needed here as we kind of assumed it
 
 # FIXME assumption - we're not handling indexation calls
 # so $a[1]("ha"); isn't handled
@@ -170,7 +170,7 @@ class FunctionCallNode(ExpressionNode):
 # Stuff like $_GET and $_POST
 class EntryPointNode(VariableNode):
     def __init__(self, kind, name, patterns):
-        VariableNode.__init__(self, kind, name)
+        VariableNode.__init__(self, kind, name, patterns)
         self.tainted = True
         self.visited = True
         self.patterns = patterns  # A list of patterns vulnerable to these entry points
@@ -179,20 +179,31 @@ class EntryPointNode(VariableNode):
         return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + ', ' \
                 'patterns: ' + self.patterns.__repr__() + '>'
 
+
     # This node bad, load its tainted patterns
     def is_tainted(self, knowledge):
-
-        indexation_name_or_id = ""
-        if hasattr(self, 'name'):
-            indexation_name_or_id = self.name
-        else:
-            indexation_name_or_id = self.id
-
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
-        self.knowledge.kinds[self.kind].nodes[indexation_name_or_id].append(self.patterns)
+        # FIXME repeated patterns
+        self.knowledge.kinds[self.kind].nodes[self.id] = self.patterns
+        self.knowledge.kinds[self.kind].nodes[self.name].append([pat for pat in self.patterns])
 
         return self.knowledge
+
+    """
+    # This node bad, load its tainted patterns
+    def is_tainted(self, knowledge):
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        for pattern in self.patterns:
+            if '$' + self.name in pattern.get_entry_points():
+                self.knowledge.kinds[self.kind].nodes[self.name].append(self.patterns)
+
+        return self.knowledge
+
+        # FIXME assuming entry points are special cases because of imediate use of entry points
+
+    """
 
 
 class ConstantNode(ExpressionNode):
@@ -243,6 +254,14 @@ class EncapsedStringNode(ExpressionNode):
         return self.knowledge
 
 
+def flatten(S):
+    if S == []:
+        return S
+    if isinstance(S[0], list):
+        return flatten(S[0]) + flatten(S[1:])
+    return S[:1] + flatten(S[1:])
+
+
 # FIXME assuming all arguments in a sink are sensitive
 class SinkCallNode(FunctionCallNode):
     def __init__(self, kind, name, arguments, patterns_list):
@@ -251,11 +270,39 @@ class SinkCallNode(FunctionCallNode):
 
     def is_tainted(self, knowledge):
 
+
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
         for arg in self.arguments:
+
+            indexation_name_or_id = ""
+            if hasattr(arg, 'name'):
+                indexation_name_or_id = arg.name
+            else:
+                indexation_name_or_id = arg.id
+
             self.knowledge = arg.is_tainted(self.knowledge)
 
+            self.knowledge.kinds[self.kind].nodes[self.name]\
+                .append(self.knowledge.kinds[arg.kind].nodes[arg.name])
+
+        patterns_list = self.knowledge.kinds[self.kind].nodes[self.name]
+
+        for pattern in flatten(patterns_list):
+            # print("AAAAAAAAAAAAAAAAAAAAAAAAAA", pattern.__repr__())
+            sinks_list = pattern.get_sinks()
+            # print(sinks_list.__repr__())
+            # print(self.name)
+
+            if self.name in sinks_list:
+                print("====================================================================")
+                print("                           VULNERABILITY                            ")
+                print("                               FOUND                                ")
+                print("                                                                    ")
+                print("Vulnerability Name: " + pattern.get_vulnerability_name().__repr__())
+                print("Possible sanitizations: " + pattern.get_sanitization_functions().__repr__())
+                print("====================================================================")
+        """
         for arg in self.arguments:
 
             indexation_name_or_id = ""
@@ -267,21 +314,10 @@ class SinkCallNode(FunctionCallNode):
             patterns_lists = self.knowledge.kinds[arg.kind].nodes[indexation_name_or_id]
 
             for patterns_list in patterns_lists:
-                for pattern in patterns_list:
-                    #print("AAAAAAAAAAAAAAAAAAAAAAAAAA", pattern.__repr__())
-                    sinks_list = pattern.get_sinks()
-                    #print(sinks_list.__repr__())
-                    #print(self.name)
-                    if self.name in sinks_list:
-                        print("====================================================================")
-                        print("                           VULNERABILITY                            ")
-                        print("                               FOUND                                ")
-                        print("                                                                    ")
-                        print("Vulnerability Name: " + pattern.get_vulnerability_name().__repr__())
-                        print("Possible sanitizations: " + pattern.get_sanitization_functions().__repr__())
-                        print("====================================================================")
+                
 
             #print("acabei")
+            """
         return self.knowledge
 
 

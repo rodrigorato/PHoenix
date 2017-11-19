@@ -169,7 +169,8 @@ class NodeManager:
                                       patterns)
             else:
                 return VariableNode(node_json['kind'],
-                                    node_json['name'])
+                                    node_json['name'],
+                                    list_of_patterns)
 
         # Handles the EncapsedStringNode
         elif is_kind(node_json, 'encapsed'):
@@ -183,7 +184,7 @@ class NodeManager:
         elif is_kinds(node_json, ('call', 'echo')):
 
             # Check if its a Sink or Sanitization function call
-            if is_kinds(node_json, ('call')):
+            if is_kind(node_json, 'call'):
                 if node_json['what']['name'] in sinks_to_patterns:
                     # Create a SinkCallNode
                     return SinkCallNode(node_json['kind'],
@@ -201,17 +202,23 @@ class NodeManager:
             elif is_kind(node_json, 'echo'):
                 if node_json['kind'] in sinks_to_patterns:
                     # Create a SinkCallNode
-                    return SinkCallNode(node_json['kind'],
-                                        node_json['kind'],
-                                        build_children(node_json['arguments']),
-                                        sinks_to_patterns[node_json['kind']])
+                    scn = SinkCallNode(node_json['kind'],
+                                       node_json['kind'],
+                                       build_children(node_json['arguments']),
+                                       sinks_to_patterns[node_json['kind']])
+
+                    scn.name = scn.name
+                    return scn
 
                 elif node_json['kind'] in sanitizations_to_patterns:
                     # Create a SanitizationCallNode
-                    return SanitizationCallNode(node_json['kind'],
-                                                node_json['kind'],
-                                                build_children(node_json['arguments']),
-                                                sanitizations_to_patterns[node_json['kind']])
+                    scn = SanitizationCallNode(node_json['kind'],
+                                               node_json['kind'],
+                                               build_children(node_json['arguments']),
+                                               sanitizations_to_patterns[node_json['kind']])
+
+                    scn.name = scn.name
+                    return scn
 
             name = None
             if node_json['kind'] == 'echo':
