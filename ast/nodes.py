@@ -1,6 +1,6 @@
 import pprint
-from ast.taintknowledge import *
 
+from ast.taintknowledge import KindKnowledge
 
 def pretty_format(obj):
     return pprint.PrettyPrinter(indent=4).pformat(obj)
@@ -18,9 +18,8 @@ class Node:
 
     def is_tainted(self, knowledge):
         # FIXME check if all we need to do is update with the previous knowledge
-        self.knowledge = knowledge
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
         return self.knowledge
-
 
 
 # This is just a fancy name for an abstraction of a node that has child nodes
@@ -34,11 +33,18 @@ class ChildfulNode(Node):
         return '<kind:' + self.kind + ', children:' + pretty_format(self.children) + '>'
 
     def is_tainted(self, knowledge):
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
         # For this node all we need to do is update our knowledge
         # with the knowledge from all our children
         for child in self.children:
-            self.knowledge = child.is_tainted(knowledge)
+            # FIXME we're doing the check like this to a void cyclic dependencies
+            # FIXME this is also an assumption.
+            if child.kind == 'function':
+                # Store it and don't analyse it yet
+                self.knowledge.function_def_nodes[child.name] = child
+            else:
+                self.knowledge = child.is_tainted(self.knowledge)
 
         return self.knowledge
 

@@ -1,8 +1,17 @@
-from ast import *
+from ast.nodes import ProgramNode, ChildfulNode, Node
+from ast.conditionalnodes import IfThenElseNode, SwitchNode, CaseNode, ElseNode
+from ast.cyclenodes import WhileNode, DoWhileNode, ForNode
+from ast.expressionnodes import AttributionNode, UnaryExpression, BinaryExpression, TernaryExpression, \
+                                EntryPointNode, VariableNode, EncapsedStringNode, FunctionCallNode, ConstantNode
+from ast.functionnodes import FunctionDefinitionNode, FunctionDefinitionArgumentsNode
+
+
 from vulnpatterns.patternmanager import PatternManager
+
 
 def is_kind(json, kind_name):
     return json['kind'] == kind_name if 'kind' in json else False
+
 
 def is_kinds(json, kind_names):
     return json['kind'] in kind_names if 'kind' in json else False
@@ -17,7 +26,10 @@ def build_children(children_list):
         children.append(NodeManager.build_node_from_json(child))
     return children
 
+
 list_of_entry_points = PatternManager().get_unique_patterns_list()
+
+
 
 class NodeManager:
 
@@ -151,7 +163,7 @@ class NodeManager:
                                       build_children(node_json['value']),
                                       node_json['type'])
 
-        # Handles FunctionCallNode
+        # Handles FunctionCallNode, SinkCallNode and SanitizationCallNode
         # FIXME We're assuming echo is a normal Function call
         elif is_kinds(node_json, ('call', 'echo')):
 

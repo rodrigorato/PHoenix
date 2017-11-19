@@ -68,13 +68,16 @@ class TaintKnowledge:
         return not self.is_empty()
 
 
-
 # FIXME assuming node_kinds and node_names are strings
 # FIXME tainted_by_patternI is a Pattern object
 # An abstraction for the outer dict
 class KindKnowledge:
     def __init__(self):
         self.__kinds = defaultdict(TaintKnowledge)
+
+        # A dict of FunctionDefinitionNodes mapped by their names
+        # FIXME storing as object to avoid cyclic dependencies
+        self.function_def_nodes = defaultdict(object)
 
     def get_kinds(self):
         return self.__kinds.keys()
@@ -107,3 +110,46 @@ class KindKnowledge:
 
     def remove_pattern_from_kind_node(self, kind_name, node_name, sanitization_function_name):
         self.__kinds[kind_name].remove_pattern_from_node(self, node_name, sanitization_function_name)
+
+
+    # FIXME assuming no two dict entries have the same key
+    @staticmethod
+    def union_dicts(this_dict, that_dict):
+
+        if this_dict and not that_dict:
+            return this_dict
+
+        if that_dict and not this_dict:
+            return that_dict
+
+        for key in this_dict:
+            that_dict[key] = this_dict[key]
+
+        return that_dict
+
+
+    @staticmethod
+    def union(this, that):
+
+        # Check when that == None (or empty)
+        if this and not that:
+            this.function_def_nodes = KindKnowledge.union_dicts(this.function_def_nodes,
+                                                                that.function_def_nodes)
+            return this
+
+        # Check when this == None (or empty)
+        if that and not this:
+            that.function_def_nodes = KindKnowledge.union_dicts(this.function_def_nodes,
+                                                                that.function_def_nodes)
+            return that
+
+        # Get the 'union' of two KindKnowledges
+        # e.g. {a, b} U {c, d} = {a, b, c, d}
+        for kind in that.get_kinds():
+            for node in that[kind]:
+                for pattern in that[kind][node]:
+                    this.add_pattern_to_kind_node(kind, node, pattern)
+
+        this.function_def_nodes = KindKnowledge.union_dicts(this.function_def_nodes,
+                                                            that.function_def_nodes)
+        return this

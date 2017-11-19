@@ -1,4 +1,10 @@
-from ast.nodes import *
+from ast.nodes import Node
+from ast.taintknowledge import KindKnowledge
+import pprint
+
+
+def pretty_format(obj):
+    return pprint.PrettyPrinter(indent=4).pformat(obj)
 
 
 class ExpressionNode(Node):
@@ -76,12 +82,28 @@ class FunctionCallNode(ExpressionNode):
     def __init__(self, kind, name, arguments):
         ExpressionNode.__init__(self, kind)
         self.name = name
-        self.arguments = arguments  # arguments is a list of VariableNodes
+        self.arguments = arguments  # arguments is a list of ExpressionNodes
 
     def __repr__(self):
         return '<kind:' + self.kind + ',' \
                 'name: ' + self.name + ',' \
                 'arguments: ' + pretty_format(self.arguments) + '>'
+
+    def is_tainted(self, knowledge):
+
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        if self.name in self.knowledge.function_def_nodes:
+            func_def_node = self.knowledge.function_def_nodes[self.name]
+
+            knowledge_for_func_call = self.knowledge
+
+            # Match the arguments from this func call to the func def
+            for arg_index in range(len(func_def_node.arguments)):
+                func_def_node.arguments[arg_index].name = self.arguments[arg_index]
+
+
+            func_def_node.is_tainted()
 
 
 # Stuff like $_GET and $_POST
@@ -112,3 +134,15 @@ class EncapsedStringNode(ExpressionNode):
         ExpressionNode.__init__(self, kind)
         self.value = value  # Value is a list of ExpressionNodes
         self.type = type  # FIXME assuming only string is possible
+
+
+class SinkCallNode(FunctionCallNode):
+    def __init__(self, kind, name, arguments, patterns_list):
+        FunctionCallNode.__init__(self, kind, name, arguments)
+        self.patterns_list = patterns_list
+
+
+class SanitizationCallNode(FunctionCallNode):
+    def __init__(self, kind, name, arguments, patterns_list):
+        FunctionCallNode.__init__(self, kind, name, arguments)
+        self.patterns_list = patterns_list

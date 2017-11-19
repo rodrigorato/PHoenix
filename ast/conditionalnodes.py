@@ -1,4 +1,9 @@
-from ast.nodes import *
+from ast.nodes import ChildfulNode
+from ast.taintknowledge import KindKnowledge
+import pprint
+
+def pretty_format(obj):
+    return pprint.PrettyPrinter(indent=4).pformat(obj)
 
 
 class IfThenElseNode(ChildfulNode):
@@ -13,10 +18,38 @@ class IfThenElseNode(ChildfulNode):
                'children:' + pretty_format(self.children) + ',' \
                + (pretty_format(self.alternate) if self.alternate else '') + '>'
 
+    def is_tainted(self, knowledge):
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        # Update our knowledge with the test, its mandatory
+        self.knowledge = self.test.is_tainted(self.knowledge)
+
+        # Branch into 2 possible cases
+        # The If body and The Else body
+        knowledge_if_body, knowledge_else_body = self.knowledge, self.knowledge
+        for child in self.body:
+            knowledge_if_body = child.is_tainted(self.knowledge)
+
+        if self.alternate:
+            knowledge_else_body = self.alternate.is_tainted(self.knowledge)
+
+        # TODO check if knowledge.union(other) works use it lol
+        self.knowledge = KindKnowledge.union(knowledge_if_body, knowledge_else_body)
+
+        return self.knowledge
+
 
 class ElseNode(ChildfulNode):
     def __init__(self, kind, children):
         ChildfulNode.__init__(self, kind, children)
+
+    def is_tainted(self, knowledge):
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        # The children are handled by the ChildfulNode
+        self.knowledge = ChildfulNode.is_tainted(self, self.knowledge)
+
+        return self.knowledge
 
 
 # A SwitchNode's child are its CaseNodes
@@ -30,6 +63,17 @@ class SwitchNode(ChildfulNode):
                'test: ' + pretty_format(self.test) + ',' \
                'body: ' + pretty_format(self.children) + '>'
 
+    def is_tainted(self, knowledge):
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        # Update our knowledge with the test, its mandatory
+        self.knowledge = self.test.is_tainted(self.knowledge)
+
+        # The children are handled by the ChildfulNode
+        self.knowledge = ChildfulNode.is_tainted(self, self.knowledge)
+
+        return self.knowledge
+
 
 class CaseNode(ChildfulNode):
     def __init__(self, kind, test, body):
@@ -40,3 +84,16 @@ class CaseNode(ChildfulNode):
         return '<kind:' + self.kind + ',' \
                'test: ' + pretty_format(self.test) + ',' \
                'body: ' + pretty_format(self.children) + '>'
+
+    def is_tainted(self, knowledge):
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        # Update our knowledge with the test, its mandatory
+        # FIXME we're assuming the case's test is only constants
+        # FIXME but our program should be immune either way
+        self.knowledge = self.test.is_tainted(self.knowledge)
+
+        # The children are handled by the ChildfulNode
+        self.knowledge = ChildfulNode.is_tainted(self, self.knowledge)
+
+        return self.knowledge

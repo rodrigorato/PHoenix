@@ -1,5 +1,10 @@
-from ast.nodes import *
-from ast.expressionnodes import *
+from ast.nodes import ChildfulNode
+from ast.expressionnodes import VariableNode
+from ast.taintknowledge import KindKnowledge
+import pprint
+
+def pretty_format(obj):
+    return pprint.PrettyPrinter(indent=4).pformat(obj)
 
 
 # FIXME assumption, we're ignoring type hinting
@@ -14,6 +19,17 @@ class FunctionDefinitionNode(ChildfulNode):
                 'name: ' + self.name + ',' \
                 'arguments: ' + pretty_format(self.arguments) + ',' \
                 'children: ' + pretty_format(self.children) + '>'
+
+    def is_tainted(self, knowledge):
+
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        # Handle the body instructions (like a ChildfulNode)
+        return_knowledge = ChildfulNode.is_tainted(self, self.knowledge)
+
+        self.knowledge = KindKnowledge()  # Empty its knowledge so that the next call doesn't have values (yet)
+
+        return return_knowledge
 
 
 # TODO not considering byref arguments

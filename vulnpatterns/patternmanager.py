@@ -8,6 +8,7 @@ class PatternManager:
         self._sinks_to_patterns = defaultdict(list)
         self._sinks = self.filter_sinks()
         self._unique_patterns_list = []
+        self._sanits_to_patterns = defaultdict(list)
 
         for pattern in self._patterns:
             for entry_point in pattern._entry_points:
@@ -59,6 +60,14 @@ class PatternManager:
             sinks_to_patterns_dict[sink].append(self._sinks_to_patterns[sink])
 
         return sinks_to_patterns_dict
+
+    def get_sanitizations_to_patterns_dict(self, sanits):
+        sanits_to_patterns_dict = defaultdict(list)
+
+        for sanit in sanits:
+            sanits_to_patterns_dict[sanit].append(self._sanits_to_patterns[sanit])
+
+        return sanits_to_patterns_dict
 
     def test():
         for pattern in get_patterns():
