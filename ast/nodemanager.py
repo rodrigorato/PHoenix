@@ -147,14 +147,12 @@ class NodeManager:
                                     node_json['what']['name'],
                                     build_children(node_json['arguments']))
 
-
         # Handles the ConstantNode
         # FIXME assuming these are the only literal kinds
         elif is_kinds(node_json, ('boolean', 'string', 'number', 'inline', 'magic', 'nowdoc')):
 
             return ConstantNode(node_json['kind'],
                                 node_json['value'])
-
 
         # Handles the FunctionDefinitionNode
         elif is_kind(node_json, 'function'):
@@ -164,8 +162,17 @@ class NodeManager:
                                           build_children(node_json['arguments']),
                                           build_children(node_json['body']['children']))
 
+        # Handles the FunctionDefinitionArgumentsNode
+        elif is_kind(node_json, 'parameter'):
 
+            has_value = 'value' in node_json and node_json['value']
+            value = None
+            if has_value:
+                value = NodeManager.build_node_from_json(node_json['value'])
 
+            return FunctionDefinitionArgumentsNode(node_json['kind'],
+                                                   node_json['name'],
+                                                   value)
 
         # ATTENTION - Leave this to catch any node with children that we did not consider
         elif 'body' in node_json and 'children' in node_json['body']:
