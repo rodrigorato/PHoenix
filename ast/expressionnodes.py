@@ -272,7 +272,37 @@ class SinkCallNode(FunctionCallNode):
             #print("acabei")
         return self.knowledge
 
+
 class SanitizationCallNode(FunctionCallNode):
     def __init__(self, kind, name, arguments, patterns_list):
         FunctionCallNode.__init__(self, kind, name, arguments)
         self.patterns_list = patterns_list
+
+    def is_tainted(self, knowledge):
+
+        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        for arg in self.arguments:
+
+            indexation_name_or_id = ""
+            if hasattr(arg, 'name'):
+                indexation_name_or_id = arg.name
+            else:
+                indexation_name_or_id = arg.id
+
+            new_patterns_lists = []
+            patterns_lists = self.knowledge.kinds[arg.kind].nodes[indexation_name_or_id]
+            for patterns_list in patterns_lists:
+
+                new_patterns_list = []
+                for pattern in patterns_list:
+                    sanits_list = pattern.get_sanitization_functions()
+
+                    if self.name not in sanits_list:
+                        new_patterns_list.append(pattern)
+
+                new_patterns_lists.append(new_patterns_list)
+
+            self.knowledge.kinds[arg.kind].nodes[indexation_name_or_id] = new_patterns_lists
+
+        return self.knowledge
