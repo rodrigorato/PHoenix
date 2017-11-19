@@ -31,6 +31,10 @@ class AttributionNode(ExpressionNode):
         # Evaluate the right expression
         self.knowledge = self.right_expr.is_tainted(self.knowledge)
 
+        # Give the right expression's patterns to the left one
+        self.knowledge.kinds[self.left_expr.kind].nodes[self.left_expr.id] = \
+            self.knowledge.kinds[self.right_expr.kind].nodes[self.right_expr.id]
+
         # Record that we learned this (un)taintness and return it out
         return self.knowledge
 
@@ -122,7 +126,7 @@ class FunctionCallNode(ExpressionNode):
 
             func_def_node.is_tainted()
 
-        # The function isnt defined here
+        # The function isn't defined here
         # FIXME we're assuming it is safe
         else:
 
@@ -148,7 +152,7 @@ class EntryPointNode(VariableNode):
     # This node bad, load its tainted patterns
     def is_tainted(self, knowledge):
 
-        knowledge.kinds[self.kind].nodes[self.id] = []
+        knowledge.kinds[self.kind].nodes[self.id] = self.patterns
 
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 

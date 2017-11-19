@@ -49,10 +49,9 @@ class TaintKnowledge:
 
     def __repr__(self):
         s = '<TAINT-KNOWLEDGE: '
-        for elem in self.nodes:
-            s += '<' + elem.__repr__() + '>'
+        for key, item in self.nodes.items():
+            s += '<' + str(key) + ': ' + item.__repr__() + '>'
         s += '>'
-
         return s
 
     def is_empty(self):

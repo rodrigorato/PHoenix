@@ -160,7 +160,7 @@ class NodeManager:
 
                 patterns = []
                 for pattern in list_of_patterns:
-                    if '$' + node_json['name'] in pattern._entry_points:
+                    if ('$' + node_json['name']) in pattern.get_entry_points():
                         patterns.append(pattern)
 
                 return EntryPointNode(node_json['kind'],
