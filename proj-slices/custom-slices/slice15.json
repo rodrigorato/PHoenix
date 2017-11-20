@@ -1,0 +1,112 @@
+{
+  "kind": "program",
+  "children": [
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "a",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "offsetlookup",
+        "what": {
+          "kind": "variable",
+          "name": "_POST",
+          "byref": false,
+          "curly": false
+        },
+        "offset": {
+          "kind": "string",
+          "value": "a",
+          "isDoubleQuote": true
+        }
+      }
+    },
+    {
+      "kind": "if",
+      "test": {
+        "kind": "variable",
+        "name": "a",
+        "byref": false,
+        "curly": false
+      },
+      "body": {
+        "kind": "block",
+        "children": [
+          {
+            "kind": "assign",
+            "operator": "=",
+            "left": {
+              "kind": "variable",
+              "name": "a",
+              "byref": false,
+              "curly": false
+            },
+            "right": {
+              "kind": "string",
+              "value": "",
+              "isDoubleQuote": true
+            }
+          }
+        ]
+      },
+      "alternate": {
+        "kind": "block",
+        "children": [
+          {
+            "kind": "assign",
+            "operator": "=",
+            "left": {
+              "kind": "variable",
+              "name": "a",
+              "byref": false,
+              "curly": false
+            },
+            "right": {
+              "kind": "string",
+              "value": "",
+              "isDoubleQuote": true
+            }
+          }
+        ]
+      },
+      "shortForm": false
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "q",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "call",
+        "what": {
+          "kind": "identifier",
+          "resolution": "uqn",
+          "name": "mysql_query"
+        },
+        "arguments": [
+          {
+            "kind": "variable",
+            "name": "a",
+            "byref": false,
+            "curly": false
+          },
+          {
+            "kind": "variable",
+            "name": "koneksi",
+            "byref": false,
+            "curly": false
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}
