@@ -330,6 +330,8 @@ class SanitizationCallNode(FunctionCallNode):
 
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
+        sanitized_something = False
+
         for arg in self.arguments:
 
             indexation_name_or_id = ""
@@ -348,9 +350,14 @@ class SanitizationCallNode(FunctionCallNode):
 
                     if self.name not in sanits_list:
                         new_patterns_list.append(pattern)
+                    else:
+                        sanitized_something = True
 
                 new_patterns_lists.append(new_patterns_list)
 
             self.knowledge.kinds[arg.kind].nodes[indexation_name_or_id] = new_patterns_lists
+
+            if sanitized_something:
+                print("The function " + self.name + " sanitized the input.")
 
         return self.knowledge
