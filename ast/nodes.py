@@ -2,15 +2,17 @@ import pprint
 
 from ast.taintknowledge import KindKnowledge
 
+
 def pretty_format(obj):
     return pprint.PrettyPrinter(indent=4).pformat(obj)
 
 
 class Node:
     id = 0
+
     def __init__(self, kind):
         self.kind = kind      # This node's kind
-        self.tainted = False  # FIXME assuming its good until an entry point is found
+        self.tainted = False  # assuming its good until an entry point is found
         self.visited = False  # has this node been visited already?
         self.knowledge = KindKnowledge()
 
@@ -22,7 +24,7 @@ class Node:
         return '<kind:' + self.kind + ', id:' + str(self.id) + ',  taint-knowledge:' + pretty_format(self.is_tainted(self.knowledge)) + '>'
 
     def is_tainted(self, knowledge):
-        # FIXME check if all we need to do is update with the previous knowledge
+        # check if all we need to do is update with the previous knowledge
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
         return self.knowledge
 
@@ -43,8 +45,7 @@ class ChildfulNode(Node):
         # For this node all we need to do is update our knowledge
         # with the knowledge from all our children
         for child in self.children:
-            # FIXME we're doing the check like this to a void cyclic dependencies
-            # FIXME this is also an assumption.
+            # we're doing the check like this to a void cyclic dependencies
             if child.kind == 'function':
                 # Store it and don't analyse it yet
                 self.knowledge.function_def_nodes[child.name] = child
@@ -63,15 +64,3 @@ class ProgramNode(ChildfulNode):
     def do_static_analysis(self):
         self.knowledge = self.is_tainted(self.knowledge)
         return self.knowledge
-
-
-"""
-# FIXME assumes a node that is actually *nothing* is untainted
-class NothingNode(Node):
-    def __init__(self):
-        Node.__init__(self, 'NOTHING')
-        self.tainted = False
-
-    def __bool__(self):
-        return False
-"""

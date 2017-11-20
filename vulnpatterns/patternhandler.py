@@ -1,5 +1,3 @@
-#from sys import exit
-#from os import listdir
 from .pattern import Pattern
 
 
@@ -29,37 +27,3 @@ def load_patterns():
             pattern = []
 
     return patterns
-
-
-"""
-def load_pattern(fd):
-    pattern = []
-    for _ in range(4):
-        line = fd.readline().rstrip('\n')
-        if line:
-            pattern.append(line)
-        else:
-            # TODO throw exception, maybe
-            break
-    return create_pattern(pattern)
-
-
-def load_patterns():
-    input_dir_path = "./vulnpatterns/patterns/"  # FIXME
-    file_ind = "pattern"
-    patterns = []
-    for filename in listdir(input_dir_path):
-        if filename.startswith(file_ind):
-            try:
-                file = open(input_dir_path + filename, 'r')
-            except FileNotFoundError:
-                exit("Pattern Handler-File error: File could not be found.")
-            else:
-
-                while file:
-                    patterns.append(load_pattern(file))
-                    if file.readline() not in ['\n', '\r\n']:
-                        break  # TODO throw exception, maybe
-                file.close()
-    return patterns
-    """

@@ -2,6 +2,7 @@ from ast.nodes import ChildfulNode
 from ast.taintknowledge import KindKnowledge
 import pprint
 
+
 def pretty_format(obj):
     return pprint.PrettyPrinter(indent=4).pformat(obj)
 
@@ -15,8 +16,6 @@ class CycleNode(ChildfulNode):
         return '<kind:' + self.kind + ', id:' + str(self.id) + ', test: ' + pretty_format(self.test) + ',' \
                'children: ' + pretty_format(self.children) + '>'
 
-    # FIXME assuming when a cycle is ran the test runs first
-    # FIXME assuming cycles are ran once after the test
     def is_tainted(self, knowledge):
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
@@ -36,8 +35,6 @@ class WhileNode(CycleNode):
     def is_tainted(self, knowledge):
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
-        # The While is just like a cycle therefore we have the same assumptions
-        # FIXME check the CycleNode assumptions because they're the same here
         self.knowledge = CycleNode.is_tainted(self, self.knowledge)
 
         return self.knowledge
@@ -47,8 +44,6 @@ class DoWhileNode(CycleNode):
     def __init__(self, kind, children, test):
         CycleNode.__init__(self, kind, children, test)
 
-    # FIXME assuming when a cycle is ran the test runs before
-    # FIXME assuming cycles are ran once before the test
     def is_tainted(self, knowledge):
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
@@ -73,10 +68,8 @@ class ForNode(CycleNode):
                 'increment: ' + pretty_format(self.increment) + ',' + \
                 'children: ' + pretty_format(self.children) + '>'
 
-    # FIXME assuming the order of execution for a for cycle is:
-    # FIXME init -> test -> children -> increment
-    # FIXME and everything is only ran once
-    # FIXME also assuming the test is a list (only for the ForNode)
+    # assuming the order of execution for a for cycle is:
+    # init -> test -> children -> increment
     def is_tainted(self, knowledge):
 
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
@@ -97,4 +90,3 @@ class ForNode(CycleNode):
             self.knowledge = increment_instructions.is_tainted(self.knowledge)
 
         return self.knowledge
-

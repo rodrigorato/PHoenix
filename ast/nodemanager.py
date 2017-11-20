@@ -21,11 +21,11 @@ def is_kinds(json, kind_names):
 # Build a list with the child nodes of some node
 def build_children(children_list):
     children = []
-    # TODO check if this works with a null children vector
     for child in children_list:
         # And build their nodes
         children.append(NodeManager.build_node_from_json(child))
     return children
+
 
 p = PatternManager()
 
@@ -52,11 +52,10 @@ class NodeManager:
             return ProgramNode(node_json['kind'],
                                children)
 
-        # FIXME assuming parenthesis is just evaluating the inner part
         elif is_kind(node_json, 'parenthesis'):
             return NodeManager.build_node_from_json(node_json['inner'])
 
-        # TODO FIXME maybe account for arrays one day. no time now.
+        # TODO account for arrays one day. no time now.
         elif is_kind(node_json, 'offsetlookup'):
             return NodeManager.build_node_from_json(node_json['what'])
 
@@ -128,7 +127,7 @@ class NodeManager:
                                    NodeManager.build_node_from_json(node_json['right']))
 
         # Handles the UnaryExpression (with a list of unary expressions)
-        # FIXME assuming 'cast' is an unary operation
+        # assuming 'cast' is an unary operation
         elif is_kinds(node_json, ('pre', 'post', 'unary', 'cast')):
 
             return UnaryExpression(node_json['kind'],
@@ -136,8 +135,8 @@ class NodeManager:
                                    NodeManager.build_node_from_json(node_json['what']))
 
         # Handles the BinaryExpression
-        # FIXME assuming all have kind 'bin'
-        # FIXME reference: https://github.com/glayzzle/php-parser/blob/master/src/ast/bin.js
+        # assuming all have kind 'bin'
+        # reference: https://github.com/glayzzle/php-parser/blob/master/src/ast/bin.js
         elif is_kind(node_json, 'bin'):
 
             return BinaryExpression(node_json['kind'],
@@ -180,7 +179,7 @@ class NodeManager:
                                       node_json['type'])
 
         # Handles FunctionCallNode, SinkCallNode and SanitizationCallNode
-        # FIXME We're assuming echo is a normal Function call
+        # we're assuming echo is a normal Function call
         elif is_kinds(node_json, ('call', 'echo')):
 
             # Check if its a Sink or Sanitization function call
@@ -229,7 +228,7 @@ class NodeManager:
                                     build_children(node_json['arguments']))
 
         # Handles the ConstantNode
-        # FIXME assuming these are the only literal kinds
+        # assuming these are the only literal kinds
         elif is_kinds(node_json, ('boolean', 'string', 'number', 'inline', 'magic', 'nowdoc')):
 
             return ConstantNode(node_json['kind'],
