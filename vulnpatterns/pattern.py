@@ -28,8 +28,3 @@ class Pattern:
 
     def __repr__(self):
         return '<PATTERN name: ' + self._name + '\n>'
-                #', entry_points: ' + self._entry_points.__repr__() + \
-                #', sanitization_functions: ' + self._sanitization_functions.__repr__() + \
-                #', sinks: '  + self._sinks.__repr__() + '>\n'
-
-

@@ -3,11 +3,12 @@ from ast.expressionnodes import VariableNode
 from ast.taintknowledge import KindKnowledge
 import pprint
 
+
 def pretty_format(obj):
     return pprint.PrettyPrinter(indent=4).pformat(obj)
 
 
-# FIXME assumption, we're ignoring type hinting
+# assumption, we're ignoring type hinting
 class FunctionDefinitionNode(ChildfulNode):
     def __init__(self, kind, name, arguments, children):
         ChildfulNode.__init__(self, kind, children)
@@ -31,7 +32,7 @@ class FunctionDefinitionNode(ChildfulNode):
         return return_knowledge
 
 
-# TODO not considering byref arguments
+# we're not considering byref arguments
 class FunctionDefinitionArgumentsNode(VariableNode):
     def __init__(self, kind, name, value_expr=None):
         VariableNode.__init__(self, kind, name)

@@ -1,0 +1,110 @@
+{
+  "kind": "program",
+  "children": [
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "cars",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "array",
+        "items": [
+          {
+            "kind": "entry",
+            "key": null,
+            "value": {
+              "kind": "string",
+              "value": "Yes",
+              "isDoubleQuote": true
+            }
+          },
+          {
+            "kind": "entry",
+            "key": null,
+            "value": {
+              "kind": "string",
+              "value": "No",
+              "isDoubleQuote": true
+            }
+          }
+        ],
+        "shortForm": false
+      }
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "offsetlookup",
+        "what": {
+          "kind": "variable",
+          "name": "cars",
+          "byref": false,
+          "curly": false
+        },
+        "offset": {
+          "kind": "number",
+          "value": "1"
+        }
+      },
+      "right": {
+        "kind": "offsetlookup",
+        "what": {
+          "kind": "variable",
+          "name": "_POST",
+          "byref": false,
+          "curly": false
+        },
+        "offset": {
+          "kind": "string",
+          "value": "nis",
+          "isDoubleQuote": false
+        }
+      }
+    },
+    {
+      "kind": "assign",
+      "operator": "=",
+      "left": {
+        "kind": "variable",
+        "name": "q",
+        "byref": false,
+        "curly": false
+      },
+      "right": {
+        "kind": "call",
+        "what": {
+          "kind": "identifier",
+          "resolution": "uqn",
+          "name": "mysql_query"
+        },
+        "arguments": [
+          {
+            "kind": "offsetlookup",
+            "what": {
+              "kind": "variable",
+              "name": "cars",
+              "byref": false,
+              "curly": false
+            },
+            "offset": {
+              "kind": "number",
+              "value": "1"
+            }
+          },
+          {
+            "kind": "variable",
+            "name": "koneksi",
+            "byref": false,
+            "curly": false
+          }
+        ]
+      }
+    }
+  ],
+  "errors": []
+}

@@ -16,9 +16,6 @@ class PatternManager:
                 if entry_point not in self._unique_patterns_list:
                     self._unique_patterns_list.append(entry_point)
 
-
-
-
     """
         @return a list of all sinks without a repeated one
     """
@@ -43,7 +40,7 @@ class PatternManager:
         return sinks
 
     """
-        @return a list of all sinks without a repeated one
+        @return a list of all sanitization functions without a repeated one
     """
     def filter_sanitizations(self):
         sanitizations = []
@@ -73,7 +70,7 @@ class PatternManager:
 
 
     """
-        @param a list of sinks that we're interested in
+        @param sinks a list of sinks that we're interested in
         @return a dict that maps sinks to patterns
     """
     def get_sinks_to_patterns_dict(self, sinks):
@@ -108,8 +105,7 @@ class PatternManager:
         return sinks_to_patterns
 
     """
-        @param a list of sinks that we're interested in
-        @return a dict that maps sinks to patterns
+        @return a dict that maps sanitization functions to patterns
     """
     def get_sanitizations_to_patterns(self):
         sanitizations_to_patterns = defaultdict(list)

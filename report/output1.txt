@@ -1,0 +1,10 @@
+$ ./analyser.py proj-slices/slice6.json
+     
+====================================================================
+                            VULNERABILITY                            
+                                FOUND                                
+                                                                    
+Vulnerability Name: 'Cross site scripting (XSS)'
+Possible sanitizations: ['htmlentities', 'htmlspecialchars', (...)]
+====================================================================
+

@@ -12,8 +12,6 @@ class ExpressionNode(Node):
         Node.__init__(self, kind)
 
 
-# FIXME assume left_expr is only a variable
-# FIXME not considering indexations
 class AttributionNode(ExpressionNode):
     def __init__(self, kind, left_expr, right_expr):
         ExpressionNode.__init__(self, kind)
@@ -31,7 +29,7 @@ class AttributionNode(ExpressionNode):
         # Evaluate the right expression
         self.knowledge = self.right_expr.is_tainted(self.knowledge)
 
-        # Evaluate the left expression FIXME check if necessary
+        # Evaluate the left expression
         self.knowledge = self.left_expr.is_tainted(self.knowledge)
 
         # Give the right expression's patterns to the left one
@@ -40,7 +38,6 @@ class AttributionNode(ExpressionNode):
 
         # Record that we learned this (un)taintness and return it out
         return self.knowledge
-
 
 
 class UnaryExpression(ExpressionNode):
@@ -107,7 +104,7 @@ class TernaryExpression(ExpressionNode):
         return self.knowledge
 
 
-# FIXME assumption - an indexation is a variable
+# assumption - an indexation is a variable
 # so $a[1] is a variable node
 class VariableNode(ExpressionNode):
     def __init__(self, kind, name, patterns_list):
@@ -119,7 +116,7 @@ class VariableNode(ExpressionNode):
         return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + '>'
 
 
-# FIXME assumption - we're not handling indexation calls
+# assumption - we're not handling indexation calls
 # so $a[1]("ha"); isn't handled
 class FunctionCallNode(ExpressionNode):
     def __init__(self, kind, name, arguments):
@@ -131,19 +128,13 @@ class FunctionCallNode(ExpressionNode):
         return '<kind:' + self.kind + ', id:' + str(self.id) + ', name: ' + self.name + ',' \
                 'arguments: ' + pretty_format(self.arguments) + '>'
 
-    # FIXME assuming that a function call to a function not defined here is safe
     def is_tainted(self, knowledge):
 
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
         # We have the function definition
         if self.name in self.knowledge.function_def_nodes:
-            # TODO
-            # TODO
-            # TODO Function definition case
-            # TODO
-            # TODO
-            # TODO
+            # TODO Function definition taint analysis is not fully complete
 
             func_def_node = self.knowledge.function_def_nodes[self.name]
 
@@ -153,11 +144,9 @@ class FunctionCallNode(ExpressionNode):
             for arg_index in range(len(func_def_node.arguments)):
                 func_def_node.arguments[arg_index].name = self.arguments[arg_index]
 
-
             func_def_node.is_tainted()
 
         # The function isn't defined here
-        # FIXME we're assuming it is safe
         else:
 
             # Evaluate the current arguments as they are expressions
@@ -165,6 +154,8 @@ class FunctionCallNode(ExpressionNode):
                 self.knowledge = argument.is_tainted(self.knowledge)
 
             return self.knowledge
+
+        return self.knowledge
 
 
 # Stuff like $_GET and $_POST
@@ -184,26 +175,10 @@ class EntryPointNode(VariableNode):
     def is_tainted(self, knowledge):
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
-        # FIXME repeated patterns
         self.knowledge.kinds[self.kind].nodes[self.id] = self.patterns
         self.knowledge.kinds[self.kind].nodes[self.name].append([pat for pat in self.patterns])
 
         return self.knowledge
-
-    """
-    # This node bad, load its tainted patterns
-    def is_tainted(self, knowledge):
-        self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
-
-        for pattern in self.patterns:
-            if '$' + self.name in pattern.get_entry_points():
-                self.knowledge.kinds[self.kind].nodes[self.name].append(self.patterns)
-
-        return self.knowledge
-
-        # FIXME assuming entry points are special cases because of imediate use of entry points
-
-    """
 
 
 class ConstantNode(ExpressionNode):
@@ -229,12 +204,12 @@ class EncapsedStringNode(ExpressionNode):
     def __init__(self, kind, value, type):
         ExpressionNode.__init__(self, kind)
         self.value = value  # Value is a list of ExpressionNodes
-        self.type = type  # FIXME assuming only string is possible
+        self.type = type
 
     def is_tainted(self, knowledge):
 
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
-        #print("encapsed")
+
         # Evaluate all the expressions
         for exp in self.value:
 
@@ -245,8 +220,7 @@ class EncapsedStringNode(ExpressionNode):
                 indexation_name_or_id = exp.id
 
             self.knowledge = exp.is_tainted(self.knowledge)
-            #print("EXPRESSION", exp)
-            #print("COISAS MAS", self.knowledge.kinds[exp.kind].nodes[indexation_name_or_id])
+
             # Give each expr's patterns to the encapsed one
             self.knowledge.kinds[self.kind].nodes[self.id]\
                 .append(self.knowledge.kinds[exp.kind].nodes[indexation_name_or_id])
@@ -270,7 +244,6 @@ class SinkCallNode(FunctionCallNode):
 
     def is_tainted(self, knowledge):
 
-
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
         for arg in self.arguments:
@@ -289,10 +262,7 @@ class SinkCallNode(FunctionCallNode):
         patterns_list = self.knowledge.kinds[self.kind].nodes[self.name]
 
         for pattern in flatten(patterns_list):
-            # print("AAAAAAAAAAAAAAAAAAAAAAAAAA", pattern.__repr__())
             sinks_list = pattern.get_sinks()
-            # print(sinks_list.__repr__())
-            # print(self.name)
 
             if self.name in sinks_list:
                 print("====================================================================")
@@ -302,22 +272,7 @@ class SinkCallNode(FunctionCallNode):
                 print("Vulnerability Name: " + pattern.get_vulnerability_name().__repr__())
                 print("Possible sanitizations: " + pattern.get_sanitization_functions().__repr__())
                 print("====================================================================")
-        """
-        for arg in self.arguments:
 
-            indexation_name_or_id = ""
-            if hasattr(arg, 'name'):
-                indexation_name_or_id = arg.name
-            else:
-                indexation_name_or_id = arg.id
-
-            patterns_lists = self.knowledge.kinds[arg.kind].nodes[indexation_name_or_id]
-
-            for patterns_list in patterns_lists:
-                
-
-            #print("acabei")
-            """
         return self.knowledge
 
 
@@ -329,6 +284,8 @@ class SanitizationCallNode(FunctionCallNode):
     def is_tainted(self, knowledge):
 
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
+
+        sanitized_something = False
 
         for arg in self.arguments:
 
@@ -348,9 +305,14 @@ class SanitizationCallNode(FunctionCallNode):
 
                     if self.name not in sanits_list:
                         new_patterns_list.append(pattern)
+                    else:
+                        sanitized_something = True
 
                 new_patterns_lists.append(new_patterns_list)
 
             self.knowledge.kinds[arg.kind].nodes[indexation_name_or_id] = new_patterns_lists
+
+            if sanitized_something:
+                print("The function " + self.name + " sanitized the input.")
 
         return self.knowledge

@@ -2,6 +2,7 @@ from ast.nodes import ChildfulNode
 from ast.taintknowledge import KindKnowledge
 import pprint
 
+
 def pretty_format(obj):
     return pprint.PrettyPrinter(indent=4).pformat(obj)
 
@@ -32,7 +33,6 @@ class IfThenElseNode(ChildfulNode):
         if self.alternate:
             knowledge_else_body = self.alternate.is_tainted(self.knowledge)
 
-        # TODO check if knowledge.union(other) works use it lol
         self.knowledge = KindKnowledge.union(knowledge_if_body, knowledge_else_body)
 
         return self.knowledge
@@ -86,8 +86,7 @@ class CaseNode(ChildfulNode):
         self.knowledge = KindKnowledge.union(self.knowledge, knowledge)
 
         # Update our knowledge with the test, its mandatory
-        # FIXME we're assuming the case's test is only constants
-        # FIXME but our program should be immune either way
+        # we're assuming the case's test is only constants
         self.knowledge = self.test.is_tainted(self.knowledge)
 
         # The children are handled by the ChildfulNode

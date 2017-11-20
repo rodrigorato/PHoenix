@@ -22,6 +22,7 @@ from collections import defaultdict
     
 """
 
+
 # Is an abstraction for the inner dicts
 class TaintKnowledge:
     def __init__(self):
@@ -29,7 +30,6 @@ class TaintKnowledge:
 
     def get_patterns_for_node(self, node_name):
         return self.nodes[node_name]
-
 
     def add_pattern_for_node(self, node_name, pattern):
         if pattern not in self.nodes[node_name]:
@@ -64,15 +64,13 @@ class TaintKnowledge:
         return not self.is_empty()
 
 
-# FIXME assuming node_kinds and node_names are strings
-# FIXME tainted_by_patternI is a Pattern object
 # An abstraction for the outer dict
 class KindKnowledge:
     def __init__(self):
         self.kinds = defaultdict(TaintKnowledge)
 
         # A dict of FunctionDefinitionNodes mapped by their names
-        # FIXME storing as object to avoid cyclic dependencies
+        # storing as object to avoid cyclic dependencies
         self.function_def_nodes = defaultdict(object)
 
     def get_kinds(self):
@@ -104,7 +102,7 @@ class KindKnowledge:
         self.kinds[kind_name].remove_pattern_from_node(self, node_name, sanitization_function_name)
 
 
-    # FIXME assuming no two dict entries have the same key
+    # assuming no two dict entries have the same key
     @staticmethod
     def union_dicts(this_dict, that_dict):
 
